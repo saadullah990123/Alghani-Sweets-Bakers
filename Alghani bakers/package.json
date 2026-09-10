@@ -1,0 +1,49 @@
+{
+  "name": "alghani-sweets-bakers",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate:pg": "tsx scripts/migrate-to-postgres.ts",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.5",
+    "@supabase/supabase-js": "^2.116.0",
+    "@types/nodemailer": "^8.0.1",
+    "@vercel/blob": "^0.27.0",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.33.0",
+    "lucide-react": "^0.453.0",
+    "next": "^14.2.24",
+    "nodemailer": "^10.0.0",
+    "postgres": "^3.4.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.17.0",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@types/ws": "^8.5.12",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.24.2",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.4"
+  }
+}

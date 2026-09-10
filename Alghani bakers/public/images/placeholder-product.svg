@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#FBEFE2"/>
+  <g fill="none" stroke="#C8102E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
+    <circle cx="200" cy="180" r="70"/>
+    <path d="M140 210 q60 40 120 0"/>
+    <path d="M170 130 q30 -30 60 0"/>
+  </g>
+  <text x="200" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#8a2c2c" opacity="0.7">Al-Ghani Sweets &amp; Bakers</text>
+</svg>
