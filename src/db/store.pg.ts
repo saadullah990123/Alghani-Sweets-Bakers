@@ -197,18 +197,17 @@ export async function createOrderPg(input: CreateOrderPgInput): Promise<CreateOr
     const order = await conn.transaction(async (tx) => {
       // 1. Lock + verify stock for every tracked line item BEFORE writing
       //    anything. `FOR UPDATE` holds the lock until the transaction ends.
-      for (const item of input.items) {
+      // here i change block
+       for (const item of input.items) {
         if (!item.productId) continue; // custom/one-off line item with no catalog product
-        const rows = await tx.execute(
-          sql`SELECT id, name, stock FROM ${schema.products} WHERE id = ${item.productId} FOR UPDATE`
-        );
-        // NOTE: `.rows` matches drizzle-orm's neon-serverless result shape at
-        // the time this was written (mirrors node-postgres's QueryResult).
-        // This hasn't been run against a live database in this environment —
-        // if your installed drizzle-orm/@neondatabase/serverless versions
-        // return a different shape, adjust this line accordingly (check
-        // `console.log(rows)` once against a real DB before relying on it).
-        const row = (rows as unknown as { rows: { id: string; name: string; stock: number | null }[] }).rows[0];
+
+        const rows = await tx
+          .select({ id: schema.products.id, name: schema.products.name, stock: schema.products.stock })
+          .from(schema.products)
+          .where(eq(schema.products.id, item.productId))
+          .for('update');
+
+        const row = rows[0];
         if (!row) throw new Error(`Product ${item.productId} not found`);
         if (row.stock !== null && row.stock < item.quantity) {
           throw new Error(`"${row.name}" only has ${row.stock} left in stock`);
