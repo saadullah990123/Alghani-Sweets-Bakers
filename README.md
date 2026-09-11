@@ -1,4 +1,4 @@
-<div align="center">
+<img width="1906" height="917" alt="image" src="https://github.com/user-attachments/assets/4c31c959-cb7e-489a-9e1e-2796c76ead0e" /><div align="center">
 
 # 🍬 Al-Ghani Sweets & Bakers — E-Commerce Platform
 
@@ -143,23 +143,40 @@ Visit **`http://localhost:3000`** for the storefront, and **`http://localhost:30
 <div align="center">
 
 ### 🏠 Homepage
-<!-- Add a homepage screenshot here, e.g.: -->
-<!-- <img width="1907" alt="Homepage" src="images/gallery/storefront-1.jpg" /> -->
+
+<img width="1916" height="912" alt="image" src="https://github.com/user-attachments/assets/589f600e-6184-4343-9b4c-5997c6fefd57" />
+
+<img width="1901" height="887" alt="image" src="https://github.com/user-attachments/assets/bcc98a71-062e-470f-9fe7-3bf6085b9d02" />
+
 
 ### 🍬 Sweets & Cakes
-<!-- <img width="1782" alt="Sweets page" src="images/gallery/storefront-2.jpg" /> -->
+<img width="1882" height="911" alt="image" src="https://github.com/user-attachments/assets/c30e92ee-106e-4cfd-b336-00c757e76f8e" />
+
+<img width="1906" height="910" alt="image" src="https://github.com/user-attachments/assets/2f87cfe7-4b86-417f-93b4-298dbfc336bd" />
+
+
+###  📦 Order
+
+<img width="1917" height="908" alt="image" src="https://github.com/user-attachments/assets/27a0a4ae-e5a0-4297-bb58-31f7046ef596" />
+
+<img width="1012" height="905" alt="image" src="https://github.com/user-attachments/assets/8eab2918-0710-4f56-a569-64c600619e16" />
+
 
 ### 🏪 Front Store
-<!-- Real photos of your shop front go here -->
-<!-- <img width="1845" alt="Shop front" src="images/gallery/storefront-3.jpg" /> -->
+
+<img width="1911" height="833" alt="image" src="https://github.com/user-attachments/assets/dba5d50c-70a4-4a92-a2ff-3e4203104669" />
+
+<img width="1917" height="913" alt="image" src="https://github.com/user-attachments/assets/12318c5f-615c-43c2-b664-f3d480c7c0a4" />
 
 ### 🔐 Admin Dashboard
-<!-- 1–2 screenshots of your admin panel go here -->
-<!-- <img width="1902" alt="Admin dashboard" src="images/admin/dashboard-orders.jpg" /> -->
+
+<img width="1901" height="911" alt="image" src="https://github.com/user-attachments/assets/fdd2cd66-e171-445d-a83f-9f76bc5ba827" />
+
+<img width="1907" height="908" alt="image" src="https://github.com/user-attachments/assets/95a503c7-2e19-4faf-a678-052c7acbf632" />
+
 
 </div>
 
-> To fill these in: upload the images to your repo (or drag-and-drop them into a GitHub issue/PR comment to get a `user-attachments` URL like in the reference README), then uncomment and update the `<img>` tags above.
 
 ---
 
@@ -171,6 +188,6 @@ This project is privately owned by **Al-Ghani Sweets & Bakers**. All rights rese
 
 <div align="center">
 
-Made with ❤️ for **Al-Ghani Sweets & Bakers**
 
+Designed & Developed with ❤️ by **Saad Ullah** for **Al-Ghani Sweets & Bakers**
 </div>
