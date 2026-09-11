@@ -1,4 +1,3 @@
-<img width="1906" height="917" alt="image" src="https://github.com/user-attachments/assets/4c31c959-cb7e-489a-9e1e-2796c76ead0e" /><div align="center">
 
 # 🍬 Al-Ghani Sweets & Bakers — E-Commerce Platform
 
