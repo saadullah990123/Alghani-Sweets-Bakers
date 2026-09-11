@@ -1,3 +1,4 @@
+<div align="center">
 
 # 🍬 Al-Ghani Sweets & Bakers — E-Commerce Platform
 
@@ -51,37 +52,52 @@ Public storefront with product catalogs, cart & checkout, order tracking, and a 
 | Framework | [Next.js](https://nextjs.org/) (App Router) |
 | Language | TypeScript |
 | Database & Storage | [Supabase](https://supabase.com/) (Postgres + object storage for product images) |
+| ORM | [Drizzle ORM](https://orm.drizzle.team/) |
 | Styling | Tailwind CSS |
+| Testing | [Vitest](https://vitest.dev/) |
 | Auth | Session-based admin/staff login |
 | Deployment | Vercel |
-
-> ℹ️ Adjust this table to match your actual `package.json` if any of these differ.
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-src/
-├── app/
-│   ├── admin/               # Admin dashboard (login, products, orders, settings)
-│   ├── api/
-│   │   ├── admin/           # Admin-only API routes (auth, products, orders, stats, settings)
-│   │   ├── orders/          # Public order APIs
-│   │   └── products/        # Public product APIs
-│   ├── cakes/, fast-food/, biscuits-cookies/, gift-essentials/   # Category pages
-│   ├── support/             # Support & help centre
-│   ├── track-order/         # Order tracking
-│   └── legal/               # Privacy policy, terms, refund, shipping, disclaimer
-├── components/               # Header, footer, product cards, cart, WhatsApp button, etc.
-└── lib/                       # Auth helpers, cart context, formatting utilities
+.
+├── .data/                    # Local/runtime data
+├── .next/                    # Next.js build output (generated)
+├── docs/                     # Project documentation
+├── node_modules/             # Installed dependencies (generated)
+├── public/
+│   ├── images/                # Static site images
+│   └── uploads/                # Uploaded product/media files
+├── scripts/
+│   └── migrate-to-postgres.ts  # DB migration script
+├── src/                       # App source (routes, components, lib)
+├── .env                       # Environment variables (local, untracked)
+├── .env.example               # Template for required environment variables
+├── .env.local                 # Environment variables (local overrides, untracked)
+├── .gitignore
+├── AGENTS.md                  # Notes/instructions for AI coding agents
+├── drizzle.config.ts          # Drizzle ORM configuration
+├── next-env.d.ts              # Next.js TypeScript declarations (generated)
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── README.md
+├── SCALING.md                 # Notes on scaling the platform
+├── tailwind.config.ts
+├── tsconfig.json
+├── tsconfig.tsbuildinfo       # TypeScript incremental build cache (generated)
+└── vitest.config.ts           # Vitest test configuration
 ```
 
-> ℹ️ This is a best-guess structure based on the live site's routes — replace it with your real folder layout.
+> `.next/`, `node_modules/`, `next-env.d.ts`, and `tsconfig.tsbuildinfo` are generated automatically — they don't need to be created by hand and are typically git-ignored.
 
 ---
 
-## 🗄️ Database Schema (indicative)
+## 🗄️ Database Schema
 
 | Table | Purpose |
 |---|---|
@@ -90,8 +106,6 @@ src/
 | `admins` | Admin/staff accounts |
 | `store_settings` | Key-value store for configurable site settings |
 | `complaints` | Customer complaint submissions |
-
-> ℹ️ Update this to match your actual schema.
 
 ---
 
@@ -187,6 +201,6 @@ This project is privately owned by **Al-Ghani Sweets & Bakers**. All rights rese
 
 <div align="center">
 
-
 Designed & Developed with ❤️ by **Saad Ullah** for **Al-Ghani Sweets & Bakers**
+
 </div>
