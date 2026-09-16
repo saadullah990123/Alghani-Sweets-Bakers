@@ -62,40 +62,316 @@ Public storefront with product catalogs, cart & checkout, order tracking, and a 
 
 ## 📁 Project Structure
 
-```text
-.
-├── .data/                    # Local/runtime data
-├── .next/                    # Next.js build output (generated)
-├── docs/                     # Project documentation
-├── node_modules/             # Installed dependencies (generated)
-├── public/
-│   ├── images/                # Static site images
-│   └── uploads/                # Uploaded product/media files
-├── scripts/
-│   └── migrate-to-postgres.ts  # DB migration script
-├── src/                       # App source (routes, components, lib)
-├── .env                       # Environment variables (local, untracked)
-├── .env.example               # Template for required environment variables
-├── .env.local                 # Environment variables (local overrides, untracked)
-├── .gitignore
-├── AGENTS.md                  # Notes/instructions for AI coding agents
-├── drizzle.config.ts          # Drizzle ORM configuration
-├── next-env.d.ts              # Next.js TypeScript declarations (generated)
-├── next.config.mjs
-├── package-lock.json
-├── package.json
-├── postcss.config.js
-├── README.md
-├── SCALING.md                 # Notes on scaling the platform
-├── tailwind.config.ts
-├── tsconfig.json
-├── tsconfig.tsbuildinfo       # TypeScript incremental build cache (generated)
-└── vitest.config.ts           # Vitest test configuration
+# File Tree: Alghani_bakers_mobile_polish
+
+**Generated:** 9/16/2026, 8:27:57 PM
+**Root Path:** `c:\Users\hp\Downloads\Alghani_bakers_mobile_polish`
+
+```
+├── 📁 .data
+│   └── ⚙️ store.json
+├── 📁 docs
+│   └── 📝 postgres-migration.md
+├── 📁 public
+│   ├── 📁 images
+│   │   ├── 📁 add my self
+│   │   │   ├── 🖼️ Chocolate Icing Biscuit.jpg
+│   │   │   ├── 🖼️ Vanilla Icing Biscuit.jpg
+│   │   │   ├── 🖼️ almond biscuite.jpg
+│   │   │   ├── 🖼️ candi.jpg
+│   │   │   ├── 🖼️ egg vine.jpg
+│   │   │   ├── 🖼️ frozen.jpg
+│   │   │   ├── 🖼️ fruit.jpg
+│   │   │   ├── 🖼️ kantisweets.jpg
+│   │   │   ├── 🖼️ mixmithai.jpg
+│   │   │   ├── 🖼️ nan khati.jpg
+│   │   │   ├── 🖼️ rasgule.jpg
+│   │   │   ├── 🖼️ super.jpg
+│   │   │   └── 🖼️ tuck.jpg
+│   │   ├── 📁 banners
+│   │   │   ├── 🖼️ biscuits-banner.jpg
+│   │   │   ├── 🖼️ burger-banner.jpg
+│   │   │   ├── 🖼️ cakes-banner.jpg
+│   │   │   ├── 🖼️ desserts-banner.jpg
+│   │   │   ├── 🖼️ fastfood-banner.jpg
+│   │   │   ├── 🖼️ frozen-banner.jpg
+│   │   │   ├── 🖼️ pizza-banner.jpg
+│   │   │   └── 🖼️ sandwiches-banner.jpg
+│   │   ├── 📁 biscuits
+│   │   │   └── 🖼️ zeera_biscuits.jpg
+│   │   ├── 📁 cakes
+│   │   │   ├── 🖼️ blackforestcake.jpg
+│   │   │   ├── 🖼️ butterflycake.jpg
+│   │   │   ├── 🖼️ chocolatecake.jpg
+│   │   │   ├── 🖼️ comiccake.jpg
+│   │   │   ├── 🖼️ fruitalmondmacaroncake.jpg
+│   │   │   ├── 🖼️ fruitchocaltecake.jpg
+│   │   │   ├── 🖼️ fruitdryalmondcake.jpg
+│   │   │   ├── 🖼️ fruitpondcake.jpg
+│   │   │   ├── 🖼️ fruitsugarfreecake.jpg
+│   │   │   ├── 🖼️ honeycake.jpg
+│   │   │   ├── 🖼️ kitkatcake.jpg
+│   │   │   ├── 🖼️ lotuscake.jpg
+│   │   │   ├── 🖼️ nutellacake.jpg
+│   │   │   ├── 🖼️ pineapplecake.jpg
+│   │   │   ├── 🖼️ redvalvetcake.jpg
+│   │   │   ├── 🖼️ royalfudgecake.jpg
+│   │   │   ├── 🖼️ swissrolecake.jpg
+│   │   │   └── 🖼️ threemilkchocolate.jpg
+│   │   ├── 📁 customize-cake
+│   │   │   ├── 🖼️ babymelon.jpg
+│   │   │   ├── 🖼️ bardieedoll.jpg
+│   │   │   ├── 🖼️ bliss.jpg
+│   │   │   ├── 🖼️ bossbaby.jpg
+│   │   │   ├── 🖼️ boy.jpg
+│   │   │   ├── 🖼️ donutdelite.jpg
+│   │   │   ├── 🖼️ flower.jpg
+│   │   │   ├── 🖼️ frozengirl.jpg
+│   │   │   ├── 🖼️ fuson.jpg
+│   │   │   ├── 🖼️ girl.jpg
+│   │   │   ├── 🖼️ graduate.jpg
+│   │   │   ├── 🖼️ magiccake.jpg
+│   │   │   ├── 🖼️ mainimage.jpg
+│   │   │   ├── 🖼️ nikkah.jpg
+│   │   │   ├── 🖼️ sparkle.jpg
+│   │   │   └── 🖼️ spidey.jpg
+│   │   ├── 📁 desserts
+│   │   │   └── 🖼️ glazed_donuts.jpg
+│   │   ├── 📁 fastfood
+│   │   │   ├── 🖼️ bakedwings.jpg
+│   │   │   ├── 🖼️ bbqsandwich.jpg
+│   │   │   ├── 🖼️ cheeselover.jpg
+│   │   │   ├── 🖼️ chickenbread.jpg
+│   │   │   ├── 🖼️ chickenburger.jpg
+│   │   │   ├── 🖼️ chickenfatija.jpg
+│   │   │   ├── 🖼️ chickentikka.jpg
+│   │   │   ├── 🖼️ chipotlepizza.jpg
+│   │   │   ├── 🖼️ chipotlewrap.jpg
+│   │   │   ├── 🖼️ creamytikkapizza.jpg
+│   │   │   ├── 🖼️ fajitasandwhich.jpg
+│   │   │   ├── 🖼️ friedchicken.jpg
+│   │   │   ├── 🖼️ friedchickenburger.jpg
+│   │   │   ├── 🖼️ hotburger.jpg
+│   │   │   ├── 🖼️ ranchwrap.jpg
+│   │   │   ├── 🖼️ regularfries.jpg
+│   │   │   ├── 🖼️ shahitikka.jpg
+│   │   │   ├── 🖼️ srichawrap.jpg
+│   │   │   ├── 🖼️ srirachapizza.jpg
+│   │   │   ├── 🖼️ tikkasndwich.jpg
+│   │   │   └── 🖼️ veggieloverpizza.jpg
+│   │   ├── 📁 frozen
+│   │   │   └── 🖼️ chicken_samosa_pack.jpg
+│   │   ├── 📁 hero
+│   │   │   ├── 🖼️ cruisel img1.jpg
+│   │   │   ├── 🖼️ cruisel img2.jpg
+│   │   │   ├── 🖼️ cruisel img3.jpg
+│   │   │   └── 🖼️ traditional-sweets-banner.webp
+│   │   ├── 📁 logo
+│   │   │   └── 🖼️ logo.png
+│   │   ├── 📁 sweets
+│   │   │   ├── 🖼️ chumchum.jpg
+│   │   │   ├── 🖼️ dhakawitechamchamlarge.jpg
+│   │   │   ├── 🖼️ gulab_jamun.jpg
+│   │   │   ├── 🖼️ gulabjaman-sugarfree.jpg
+│   │   │   ├── 🖼️ gulabjaman.jpg
+│   │   │   ├── 🖼️ gulabjamanblack.jpg
+│   │   │   ├── 🖼️ gulabjamanblacksmall.jpg
+│   │   │   ├── 🖼️ gulabjamanlarge.jpg
+│   │   │   ├── 🖼️ mixed_mithai.jpg
+│   │   │   └── 🖼️ mixsweetspecial.jpg
+│   │   ├── 🖼️ background-pattern.jpg
+│   │   └── 🖼️ placeholder-product.svg
+│   └── 📁 uploads
+│       └── 📁 complaints
+│           └── 🖼️ 1788848157311-c0796a7a.png
+├── 📁 scripts
+│   └── 📄 migrate-to-postgres.ts
+├── 📁 src
+│   ├── 📁 app
+│   │   ├── 📁 admin
+│   │   │   ├── 📁 account
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 categories
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 complaints
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 forgot-password
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 hero-slides
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 login
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 orders
+│   │   │   │   ├── 📁 [id]
+│   │   │   │   │   └── 📄 page.tsx
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 products
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 reset-password
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 reviews
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 settings
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📄 layout.tsx
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 api
+│   │   │   ├── 📁 admin
+│   │   │   │   ├── 📁 categories
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 complaints
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 forgot-password
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 login
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 logout
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 orders
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 products
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 profile
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 reset-password
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 reviews
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 settings
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   ├── 📁 slides
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   └── 📁 upload
+│   │   │   │       └── 📄 route.ts
+│   │   │   ├── 📁 complaints
+│   │   │   │   ├── 📁 upload
+│   │   │   │   │   └── 📄 route.ts
+│   │   │   │   └── 📄 route.ts
+│   │   │   ├── 📁 orders
+│   │   │   │   └── 📄 route.ts
+│   │   │   ├── 📁 reviews
+│   │   │   │   └── 📄 route.ts
+│   │   │   └── 📁 settings
+│   │   │       └── 📄 route.ts
+│   │   ├── 📁 biscuits
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 biscuits-cookies
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 cakes
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 checkout
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 desserts
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 fast-food
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 fastfood
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 frozen
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 gift-essentials
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 legal
+│   │   │   ├── 📁 disclaimer
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 privacy-policy
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 refund-policy
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 shipping-policy
+│   │   │   │   └── 📄 page.tsx
+│   │   │   └── 📁 terms-of-service
+│   │   │       └── 📄 page.tsx
+│   │   ├── 📁 order-confirmation
+│   │   │   └── 📁 [id]
+│   │   │       └── 📄 page.tsx
+│   │   ├── 📁 support
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 sweets
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 track-order
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📄 error.tsx
+│   │   ├── 📄 global-error.tsx
+│   │   ├── 🎨 globals.css
+│   │   ├── 📄 layout.tsx
+│   │   ├── 📄 not-found.tsx
+│   │   └── 📄 page.tsx
+│   ├── 📁 components
+│   │   ├── 📁 admin
+│   │   │   └── 📄 AdminErrorBanner.tsx
+│   │   ├── 📁 category
+│   │   │   └── 📄 CategoryLandingView.tsx
+│   │   ├── 📁 checkout
+│   │   │   └── 📄 DeliveryPaymentForm.tsx
+│   │   ├── 📁 home
+│   │   │   └── 📄 StorefrontView.tsx
+│   │   ├── 📁 layout
+│   │   │   ├── 📄 CartDrawer.tsx
+│   │   │   ├── 📄 FloatingActions.tsx
+│   │   │   ├── 📄 Footer.tsx
+│   │   │   ├── 📄 Header.tsx
+│   │   │   ├── 📄 HeroCarousel.tsx
+│   │   │   ├── 📄 LocationPickerModal.tsx
+│   │   │   ├── 📄 OfflineBanner.tsx
+│   │   │   ├── 📄 SearchBar.tsx
+│   │   │   └── 📄 TwoTierCategoryNav.tsx
+│   │   ├── 📁 legal
+│   │   │   └── 📄 LegalLayout.tsx
+│   │   └── 📁 product
+│   │       ├── 📄 CustomizedCakeModal.tsx
+│   │       ├── 📄 ProductCard.tsx
+│   │       ├── 📄 ProductDetailModal.tsx
+│   │       └── 📄 ProductImage.tsx
+│   ├── 📁 context
+│   │   ├── 📄 CartContext.tsx
+│   │   └── 📄 LocationContext.tsx
+│   ├── 📁 db
+│   │   ├── 📄 client.ts
+│   │   ├── 📄 index.ts
+│   │   ├── 📄 schema.ts
+│   │   ├── 📄 seed-data.ts
+│   │   ├── 📄 store.pg.ts
+│   │   └── 📄 store.ts
+│   ├── 📁 lib
+│   │   ├── 📁 __tests__
+│   │   │   ├── 📄 filterByCategory.test.ts
+│   │   │   ├── 📄 pagination.test.ts
+│   │   │   ├── 📄 pricing.test.ts
+│   │   │   ├── 📄 rateLimit.test.ts
+│   │   │   ├── 📄 stock.test.ts
+│   │   │   └── 📄 tokens.test.ts
+│   │   ├── 📄 auth.ts
+│   │   ├── 📄 customizationDefaults.ts
+│   │   ├── 📄 notifications.ts
+│   │   ├── 📄 pagination.ts
+│   │   ├── 📄 pricing.ts
+│   │   ├── 📄 rateLimit.ts
+│   │   ├── 📄 stock.ts
+│   │   ├── 📄 supabaseStorage.ts
+│   │   ├── 📄 tokens.ts
+│   │   ├── 📄 types.ts
+│   │   └── 📄 utils.ts
+│   └── 📄 middleware.ts
+├── ⚙️ .gitignore
+├── 📝 AGENTS.md
+├── 📝 README.md
+├── 📝 SCALING.md
+├── 📄 drizzle.config.ts
+├── 📄 next-env.d.ts
+├── 📄 next.config.mjs
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.js
+├── 📄 tailwind.config.ts
+├── ⚙️ tsconfig.json
+├── 📄 tsconfig.tsbuildinfo
+└── 📄 vitest.config.ts
 ```
 
-> `.next/`, `node_modules/`, `next-env.d.ts`, and `tsconfig.tsbuildinfo` are generated automatically — they don't need to be created by hand and are typically git-ignored.
-
 ---
+*Generated by FileTree Pro Extension*
+
 
 ## 🗄️ Database Schema
 
