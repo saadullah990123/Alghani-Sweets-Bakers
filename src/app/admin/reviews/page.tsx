@@ -89,9 +89,17 @@ export default function AdminReviewsPage() {
       {loadError && <AdminErrorBanner message={loadError} onRetry={fetchReviews} />}
 
       {loading ? (
-        <div className="py-20 text-center">
-          <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs font-bold text-gray-500 mt-2">Loading reviews...</p>
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-sm animate-pulse space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="h-4 bg-gray-200 rounded-lg w-32" />
+                <div className="h-3 bg-gray-200 rounded-lg w-20" />
+              </div>
+              <div className="h-4 bg-gray-200 rounded-lg w-3/4" />
+              <div className="h-3 bg-gray-200 rounded-lg w-24" />
+            </div>
+          ))}
         </div>
       ) : reviews.length === 0 && !loadError ? (
         <div className="p-12 text-center bg-white rounded-3xl border border-gray-200/80">

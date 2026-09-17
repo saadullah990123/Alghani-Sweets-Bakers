@@ -241,11 +241,19 @@ export default function AdminOrdersPage() {
 
             <tbody className="divide-y divide-gray-100">
               {loading ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-gray-500 text-sm">
-                    Loading orders...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse border-b border-gray-100">
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-20" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-24" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-32" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-24" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-16" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-20" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-16" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-20" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-gray-200 rounded-lg w-12" /></td>
+                  </tr>
+                ))
               ) : orders.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-12 text-center text-gray-500 text-sm">

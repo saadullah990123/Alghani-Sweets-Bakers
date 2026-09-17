@@ -375,8 +375,19 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredProducts.map((p) => {
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-white p-4 rounded-3xl border border-gray-200/80 shadow-sm animate-pulse space-y-3">
+              <div className="w-full h-40 bg-gray-200 rounded-2xl" />
+              <div className="h-4 bg-gray-200 rounded-lg w-3/4" />
+              <div className="h-4 bg-gray-200 rounded-lg w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProducts.map((p) => {
           const categoryName = categories.find((c) => c.id === p.categoryId)?.name || p.categoryId;
           return (
             <div
@@ -449,6 +460,7 @@ export default function AdminProductsPage() {
           );
         })}
       </div>
+      )}
 
       {/* Edit / Add Modal */}
       {editingProduct && (
