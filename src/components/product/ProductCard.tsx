@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Product, ProductVariant, Category } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { formatPKR, getProductFallbackImage } from '@/lib/utils';
@@ -14,7 +14,7 @@ interface ProductCardProps {
   onOpenCustomModal: (product: Product) => void;
 }
 
-export default function ProductCard({
+function ProductCard({
   product,
   categories,
   onOpenDetailModal,
@@ -216,3 +216,5 @@ export default function ProductCard({
     </div>
   );
 }
+
+export default memo(ProductCard);

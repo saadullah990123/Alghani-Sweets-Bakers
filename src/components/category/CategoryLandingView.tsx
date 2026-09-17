@@ -55,6 +55,13 @@ export default function CategoryLandingView({
   // Filter state
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  // Debounce search query so fast typing doesn't re-filter large arrays on every keystroke
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchQuery(searchQuery.trim()), 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Modals state
   const [activeDetailProduct, setActiveDetailProduct] = useState<Product | null>(null);
@@ -93,8 +100,8 @@ export default function CategoryLandingView({
     }
 
     // Dynamic real-time search query filter (name, tags, description, packInfo)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    if (debouncedSearchQuery) {
+      const q = debouncedSearchQuery.toLowerCase();
       list = list.filter((p) => {
         const matchesName = p.name.toLowerCase().includes(q);
         const matchesShortDesc = p.shortDescription?.toLowerCase().includes(q);
@@ -106,7 +113,7 @@ export default function CategoryLandingView({
     }
 
     return list;
-  }, [allCategoryProducts, selectedSubcategoryId, searchQuery, sections]);
+  }, [allCategoryProducts, selectedSubcategoryId, debouncedSearchQuery, sections]);
 
   // Switch category handler from the Category Bar
   const handleSelectCategory = (newCatId: string) => {

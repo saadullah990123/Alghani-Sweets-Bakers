@@ -27,6 +27,13 @@ export default function StorefrontView({
   );
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  // Debounce search query so fast typing doesn't re-filter large arrays on every keystroke
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchQuery(searchQuery.trim()), 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Supports deep-linking a category/subcategory from outside this
   // component — e.g. the mobile nav drawer in Header.tsx links to
@@ -64,8 +71,8 @@ export default function StorefrontView({
     let result = products;
 
     // Search query filter (matches name, tags, shortDescription, fullDescription, packInfo)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    if (debouncedSearchQuery) {
+      const q = debouncedSearchQuery.toLowerCase();
       return result.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -90,7 +97,7 @@ export default function StorefrontView({
     }
 
     return result;
-  }, [products, selectedCategoryId, selectedSubcategoryId, searchQuery]);
+  }, [products, selectedCategoryId, selectedSubcategoryId, debouncedSearchQuery]);
 
   const activeCategory = categories.find((c) => c.id === selectedCategoryId) || categories[0];
   const activeSubcategory = activeCategory?.subcategories?.find((s) => s.id === selectedSubcategoryId);
