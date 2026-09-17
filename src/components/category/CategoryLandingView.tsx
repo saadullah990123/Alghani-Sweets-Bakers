@@ -2,14 +2,16 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Category, Product } from '@/lib/types';
 import TwoTierCategoryNav, { DEDICATED_CATEGORY_ROUTES } from '@/components/layout/TwoTierCategoryNav';
 import SearchBar from '@/components/layout/SearchBar';
 import ProductCard from '@/components/product/ProductCard';
-import ProductDetailModal from '@/components/product/ProductDetailModal';
-import CustomizedCakeModal from '@/components/product/CustomizedCakeModal';
 import { PackageOpen, Award, SearchX, Sparkles } from 'lucide-react';
+
+const ProductDetailModal = dynamic(() => import('@/components/product/ProductDetailModal'), { ssr: false });
+const CustomizedCakeModal = dynamic(() => import('@/components/product/CustomizedCakeModal'), { ssr: false });
 
 export interface CategoryPageSection {
   title: string;

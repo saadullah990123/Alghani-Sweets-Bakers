@@ -21,28 +21,37 @@ interface ProductImageProps extends Omit<ImageProps, 'src' | 'onError'> {
 //      broken image UI.
 // Used for newly added Biscuits & Gift Hampers items (and any future
 // product) that may not have a dedicated photo yet.
-export default function ProductImage({ src, fallbackSrc, alt, imageScale = 100, style, ...imgProps }: ProductImageProps) {
+export default function ProductImage({ src, fallbackSrc, alt, imageScale = 100, style, className, ...imgProps }: ProductImageProps) {
   const [errored, setErrored] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const resolvedSrc = !src || errored ? fallbackSrc : src;
 
   // Reset error state if the underlying product (and therefore `src`)
   // changes, e.g. navigating between product cards that share this component.
   useEffect(() => {
     setErrored(false);
+    setIsLoaded(false);
   }, [src]);
 
   const isExternal = typeof resolvedSrc === 'string' && (resolvedSrc.startsWith('http://') || resolvedSrc.startsWith('https://'));
 
   return (
-    <Image
-      {...imgProps}
-      src={resolvedSrc}
-      alt={alt}
-      style={{ ...style, transform: `scale(${Math.max(60, Math.min(140, imageScale)) / 100})` }}
-      unoptimized={isExternal || imgProps.unoptimized}
-      onError={() => {
-        if (!errored) setErrored(true);
-      }}
-    />
+    <div className="relative w-full h-full overflow-hidden">
+      {!isLoaded && <div className="absolute inset-0 bg-gray-200/60 animate-pulse rounded-inherit" />}
+      <Image
+        {...imgProps}
+        src={resolvedSrc}
+        alt={alt}
+        decoding="async"
+        className={`${className || ''} transition-opacity duration-300 ease-in-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        style={{ ...style, transform: `scale(${Math.max(60, Math.min(140, imageScale)) / 100})` }}
+        unoptimized={isExternal || imgProps.unoptimized}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          if (!errored) setErrored(true);
+          setIsLoaded(true);
+        }}
+      />
+    </div>
   );
 }

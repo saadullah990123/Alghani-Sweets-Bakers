@@ -2,14 +2,16 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { Category, Product, HeroSlide } from '@/lib/types';
 import HeroCarousel from '@/components/layout/HeroCarousel';
 import TwoTierCategoryNav from '@/components/layout/TwoTierCategoryNav';
 import SearchBar from '@/components/layout/SearchBar';
 import ProductCard from '@/components/product/ProductCard';
-import ProductDetailModal from '@/components/product/ProductDetailModal';
-import CustomizedCakeModal from '@/components/product/CustomizedCakeModal';
 import { PackageOpen, Award } from 'lucide-react';
+
+const ProductDetailModal = dynamic(() => import('@/components/product/ProductDetailModal'), { ssr: false });
+const CustomizedCakeModal = dynamic(() => import('@/components/product/CustomizedCakeModal'), { ssr: false });
 
 interface StorefrontViewProps {
   categories: Category[];
