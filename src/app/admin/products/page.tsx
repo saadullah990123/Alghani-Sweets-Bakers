@@ -16,6 +16,8 @@ import {
   Layers,
   Search,
   Check,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
@@ -24,6 +26,13 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCatFilter, setSelectedCatFilter] = useState('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
+
+  // Reset page to 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCatFilter]);
 
   // Modal / Editor State
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
@@ -386,8 +395,11 @@ export default function AdminProductsPage() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.map((p) => {
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredProducts
+              .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+              .map((p) => {
           const categoryName = categories.find((c) => c.id === p.categoryId)?.name || p.categoryId;
           return (
             <div
@@ -460,6 +472,40 @@ export default function AdminProductsPage() {
           );
         })}
       </div>
+
+      {/* Pagination Controls */}
+      {filteredProducts.length > ITEMS_PER_PAGE && (
+        <div className="flex items-center justify-between bg-white px-6 py-4 rounded-3xl border border-gray-200/80 shadow-sm mt-4">
+          <span className="text-xs text-gray-500 font-semibold">
+            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} items
+          </span>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Prev</span>
+            </button>
+
+            <span className="text-xs font-extrabold text-brand-dark px-2">
+              Page {currentPage} of {Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE), p + 1))}
+              disabled={currentPage >= Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
+              className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+            >
+              <span>Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+      </>
       )}
 
       {/* Edit / Add Modal */}
