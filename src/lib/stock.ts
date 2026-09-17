@@ -43,17 +43,17 @@ export function applyStockDecrement<T extends StockRecord>(products: T[], items:
       return { success: false, error: `Product ${productId} not found` };
     }
 
-    // ONLY check stock if stock is explicitly configured as a POSITIVE tracking number (e.g. stock > 0)
-    // If product.stock is 0, null, or undefined, treat it as unlimited / made-to-order!
-    if (typeof product.stock === 'number' && product.stock > 0 && product.stock < quantity) {
+    // Check stock if stock is explicitly defined as a number (e.g. stock >= 0).
+    // null or undefined = unlimited / made-to-order.
+    if (typeof product.stock === 'number' && product.stock < quantity) {
       return { success: false, error: `"${product.name}" only has ${product.stock} left in stock` };
     }
   }
 
-  // Pass 2: commit. Every check above passed, so update stock only if it's actively tracked.
+  // Pass 2: commit. Every check above passed, so update stock for tracked items.
   for (const { productId, quantity } of items) {
     const product = products.find((p) => p.id === productId)!;
-    if (typeof product.stock === 'number' && product.stock > 0) {
+    if (typeof product.stock === 'number') {
       product.stock -= quantity;
     }
   }

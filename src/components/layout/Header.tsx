@@ -199,23 +199,23 @@ export default function Header({
   return (
     <>
       <header className="sticky top-0 z-40 w-full bg-white border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 h-16 sm:h-24 flex items-center justify-between gap-1 sm:gap-4">
           {/* Left: Store Location Badge & Support Phone Pill */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Store Location Badge (Fixed — not clickable) */}
             <div
-              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-gray-200 bg-gray-50/80 text-left min-h-[44px]"
+              className="flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-4 sm:py-2 rounded-full border border-gray-200 bg-gray-50/80 text-left min-h-[38px] sm:min-h-[44px]"
               title="Mator Road, near Kahuta Bus Stand, Kahuta"
             >
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
-                <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-600" />
+              <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-brand-600" />
               </div>
-              <div className="text-[11px] sm:text-xs leading-tight">
-                <span className="block text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                  Bakery Location
+              <div className="text-[10px] sm:text-xs leading-tight">
+                <span className="block text-[8px] sm:text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
+                  Location
                 </span>
-                <span className="font-bold text-gray-800 max-w-[140px] sm:max-w-[220px] truncate block">
-                  Mator Road, near Kahuta Bus Stand, Kahuta
+                <span className="font-bold text-gray-800 max-w-[80px] xs:max-w-[120px] sm:max-w-[220px] truncate block">
+                  Kahuta
                 </span>
               </div>
             </div>
@@ -234,9 +234,9 @@ export default function Header({
           </div>
 
           {/* Center: Official Logo Badge */}
-          <div className="flex items-center justify-center flex-1">
+          <div className="flex items-center justify-center flex-1 min-w-0">
             <Link href="/" className="flex flex-col items-center group">
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 transition-transform group-hover:scale-105">
+              <div className="relative w-12 h-12 sm:w-20 sm:h-20 shrink-0 transition-transform group-hover:scale-105">
                 <Image
                   src="/images/logo/logo.png"
                   alt={businessName}
@@ -250,7 +250,7 @@ export default function Header({
           </div>
 
           {/* Right: Track Order, Submit Complaint, quick-contact (mobile), Cart, Hamburger */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
             <button
               onClick={() => setTrackModalOpen(true)}
               className="hidden md:flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-brand-red transition min-h-[44px] px-2 py-1 rounded-xl hover:bg-brand-50/60"
@@ -266,19 +266,16 @@ export default function Header({
               Submit Complaint
             </button>
 
-            {/* Quick-contact icon — visible on mobile only (desktop already
-                has the full phone pill on the left). WhatsApp is the
-                bakery's actual order-support channel (see FloatingActions),
-                so this opens a chat rather than dialing. */}
+            {/* Quick-contact icon — visible on mobile only */}
             <a
               href={`https://wa.me/${cleanWhatsApp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="sm:hidden flex items-center justify-center w-11 h-11 text-[#25D366] hover:bg-green-50 rounded-full transition"
+              className="sm:hidden flex items-center justify-center w-9 h-9 text-[#25D366] hover:bg-green-50 rounded-full transition"
               aria-label="Chat with us on WhatsApp"
               title="Chat with us on WhatsApp"
             >
-              <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current">
+              <svg viewBox="0 0 32 32" className="w-5 h-5 fill-current">
                 <path d="M16.004 2.003C8.268 2.003 2.004 8.267 2.004 16.003c0 2.467.644 4.881 1.869 7.008L2 30l7.188-1.884A13.94 13.94 0 0 0 16.004 30c7.735 0 13.996-6.264 13.996-14S23.738 2.003 16.004 2.003Zm0 25.594a11.58 11.58 0 0 1-5.906-1.617l-.424-.252-4.39 1.151 1.172-4.276-.276-.44a11.54 11.54 0 0 1-1.776-6.16c0-6.408 5.216-11.62 11.627-11.62 6.408 0 11.624 5.212 11.624 11.62-.003 6.41-5.22 11.594-11.651 11.594Zm6.372-8.699c-.348-.176-2.068-1.02-2.39-1.136-.32-.116-.553-.176-.784.176-.232.348-.9 1.136-1.104 1.368-.204.232-.404.264-.752.088-.348-.176-1.468-.54-2.796-1.72-1.032-.92-1.728-2.056-1.932-2.404-.204-.348-.02-.536.152-.708.156-.156.348-.404.524-.608.176-.204.232-.348.348-.58.116-.232.06-.436-.028-.608-.088-.176-.784-1.892-1.076-2.592-.284-.68-.572-.588-.784-.6l-.668-.012c-.232 0-.608.088-.924.436-.32.348-1.212 1.184-1.212 2.888s1.24 3.348 1.416 3.58c.176.232 2.444 3.732 5.924 5.236.828.356 1.472.568 1.976.728.832.264 1.588.228 2.184.14.668-.1 2.068-.848 2.36-1.664.292-.82.292-1.52.204-1.664-.088-.148-.32-.232-.668-.408Z" />
               </svg>
             </a>
@@ -286,12 +283,12 @@ export default function Header({
             {/* Cart Icon with red badge on top right */}
             <button
               onClick={openCartDrawer}
-              className="relative flex items-center justify-center w-11 h-11 text-gray-800 hover:text-brand-red transition"
+              className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 text-gray-800 hover:text-brand-red transition"
               aria-label="Open Shopping Cart"
             >
-              <ShoppingCart className="w-6 h-6 sm:w-7 sm:h-7 stroke-[1.8]" />
+              <ShoppingCart className="w-5 h-5 sm:w-7 sm:h-7 stroke-[1.8]" />
               {totalItemsCount > 0 && (
-                <span className="absolute top-1 right-1 flex items-center justify-center min-w-[20px] h-[20px] px-1 text-[11px] font-extrabold bg-brand-600 text-white rounded-full shadow-sm animate-scaleUp">
+                <span className="absolute top-0 right-0 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-extrabold bg-brand-600 text-white rounded-full shadow-sm animate-scaleUp">
                   {totalItemsCount}
                 </span>
               )}
@@ -300,10 +297,10 @@ export default function Header({
             {/* Mobile Hamburger Menu — opens the bottom-sheet nav drawer */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex items-center justify-center w-11 h-11 text-gray-800 hover:text-brand-red transition"
+              className="flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 text-gray-800 hover:text-brand-red transition"
               aria-label="Open navigation menu"
             >
-              <Menu className="w-6 h-6 stroke-[2]" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
             </button>
           </div>
         </div>

@@ -25,7 +25,11 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [loadError, setLoadError] = useState('');
-  const [saveError, setSaveError] = useState('');
+
+  // Payment-save confirmation password state
+  const [confirmPayPassword, setConfirmPayPassword] = useState('');
+  const [showConfirmPayPassword, setShowConfirmPayPassword] = useState(false);
+  const [savePayError, setSavePayError] = useState('');
 
   // Admin Profile / Password Change State
   const [currentAdminEmail, setCurrentAdminEmail] = useState('');
@@ -74,23 +78,42 @@ export default function AdminSettingsPage() {
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settings) return;
+    setSavePayError('');
+
+    // Client-side guard: catch empty password before hitting the network.
+    if (!confirmPayPassword.trim()) {
+      setSavePayError('Please enter your admin password to confirm this change.');
+      return;
+    }
+
     setSaving(true);
-    setSaveError('');
     try {
+      // confirmPayPassword is sent alongside the settings payload so the
+      // server can verify it. The API destructs it out before writing to the
+      // store — it is never persisted, never appears in store.json.
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({ ...settings, confirmPassword: confirmPayPassword }),
       });
+
+      const data = await res.json();
+
       if (res.ok) {
+        // Success: clear ONLY the password field; payment data stays intact.
+        setConfirmPayPassword('');
         setFeedback('Store settings & payment accounts updated successfully!');
         setTimeout(() => setFeedback(''), 4000);
       } else {
-        throw new Error('The server rejected the save request.');
+        // Error: clear ONLY the password field; keep whatever the admin typed
+        // in the bank / EasyPaisa / JazzCash fields so they don't lose work.
+        setConfirmPayPassword('');
+        setSavePayError(data?.error || 'Could not save settings. Please try again.');
       }
     } catch (e) {
       console.error('Failed to save settings:', e);
-      setSaveError('Could not save settings. Please check your connection and try again.');
+      setConfirmPayPassword('');
+      setSavePayError('Network error — could not save settings. Please check your connection.');
     } finally {
       setSaving(false);
     }
@@ -178,15 +201,6 @@ export default function AdminSettingsPage() {
             Easily update Easypaisa, Bank accounts, taxes, delivery fees, and change admin login credentials.
           </p>
         </div>
-
-        <button
-          onClick={handleSaveSettings}
-          disabled={saving}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-2xl shadow-md transition shrink-0"
-        >
-          <Save className="w-4 h-4" />
-          <span>{saving ? 'Saving...' : 'Save Store & Bank Info'}</span>
-        </button>
       </div>
 
       {feedback && (
@@ -195,8 +209,6 @@ export default function AdminSettingsPage() {
           <span>{feedback}</span>
         </div>
       )}
-
-      {saveError && <AdminErrorBanner message={saveError} onRetry={() => setSaveError('')} />}
 
       <form onSubmit={handleSaveSettings} className="space-y-8">
         {/* 1. Bank, Easypaisa & JazzCash Accounts */}
@@ -280,6 +292,14 @@ export default function AdminSettingsPage() {
               </div>
             </div>
           </div>
+
+          {/* Payment-save error banner — inline, only clears on next attempt */}
+          {savePayError && (
+            <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 font-semibold">
+              <AlertCircle className="w-4 h-4 mt-0.5 text-red-500 shrink-0" />
+              <span>{savePayError}</span>
+            </div>
+          )}
 
           {/* Bank Account */}
           <div className="p-5 bg-blue-50/70 border border-blue-200/80 rounded-2xl space-y-4">
@@ -511,15 +531,49 @@ export default function AdminSettingsPage() {
             />
           </div>
 
-          <div className="pt-2 flex justify-end">
-            <button
-              type="submit"
-              disabled={saving}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-2xl shadow-md transition"
-            >
-              <Save className="w-4 h-4" />
-              <span>{saving ? 'Saving...' : 'Save All Store & Bank Info'}</span>
-            </button>
+          {/* ── Confirm-password gate ────────────────────────────────────────
+               The admin must type their current password before saving.
+               This field is ONLY used for verification — it is sent to the
+               API which destructs it out before calling saveSettings(), so
+               it is never written to store.json or printed in any log.
+               On success OR error, ONLY this field is cleared; the bank /
+               EasyPaisa / JazzCash values typed above are always preserved.
+          ─────────────────────────────────────────────────────────────────── */}
+          <div className="pt-4 border-t border-gray-100 space-y-3">
+            <div className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+              <ShieldCheck className="w-4 h-4 text-brand-500" />
+              <span>Confirm your admin password to save changes</span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="relative flex-1 max-w-xs">
+                <input
+                  id="confirm-pay-password"
+                  type={showConfirmPayPassword ? 'text' : 'password'}
+                  value={confirmPayPassword}
+                  onChange={(e) => setConfirmPayPassword(e.target.value)}
+                  placeholder="Enter your current password"
+                  autoComplete="current-password"
+                  className="w-full text-sm p-3 pr-10 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPayPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                  aria-label={showConfirmPayPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirmPayPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <button
+                type="submit"
+                disabled={saving}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-2xl shadow-md transition disabled:opacity-50 shrink-0"
+              >
+                <Save className="w-4 h-4" />
+                <span>{saving ? 'Saving...' : 'Save All Store & Bank Info'}</span>
+              </button>
+            </div>
           </div>
         </div>
       </form>

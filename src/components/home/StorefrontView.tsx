@@ -2,14 +2,16 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { Category, Product, HeroSlide } from '@/lib/types';
 import HeroCarousel from '@/components/layout/HeroCarousel';
 import TwoTierCategoryNav from '@/components/layout/TwoTierCategoryNav';
 import SearchBar from '@/components/layout/SearchBar';
 import ProductCard from '@/components/product/ProductCard';
-import ProductDetailModal from '@/components/product/ProductDetailModal';
-import CustomizedCakeModal from '@/components/product/CustomizedCakeModal';
 import { PackageOpen, Award } from 'lucide-react';
+
+const ProductDetailModal = dynamic(() => import('@/components/product/ProductDetailModal'), { ssr: false });
+const CustomizedCakeModal = dynamic(() => import('@/components/product/CustomizedCakeModal'), { ssr: false });
 
 interface StorefrontViewProps {
   categories: Category[];
@@ -27,6 +29,13 @@ export default function StorefrontView({
   );
   const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  // Debounce search query so fast typing doesn't re-filter large arrays on every keystroke
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchQuery(searchQuery.trim()), 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Supports deep-linking a category/subcategory from outside this
   // component — e.g. the mobile nav drawer in Header.tsx links to
@@ -64,8 +73,8 @@ export default function StorefrontView({
     let result = products;
 
     // Search query filter (matches name, tags, shortDescription, fullDescription, packInfo)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    if (debouncedSearchQuery) {
+      const q = debouncedSearchQuery.toLowerCase();
       return result.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -90,7 +99,7 @@ export default function StorefrontView({
     }
 
     return result;
-  }, [products, selectedCategoryId, selectedSubcategoryId, searchQuery]);
+  }, [products, selectedCategoryId, selectedSubcategoryId, debouncedSearchQuery]);
 
   const activeCategory = categories.find((c) => c.id === selectedCategoryId) || categories[0];
   const activeSubcategory = activeCategory?.subcategories?.find((s) => s.id === selectedSubcategoryId);
