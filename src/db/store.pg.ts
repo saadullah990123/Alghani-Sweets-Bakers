@@ -463,15 +463,18 @@ export async function saveProductPg(product: Product): Promise<Product> {
       });
 
     await tx.delete(schema.productVariants).where(eq(schema.productVariants.productId, product.id));
-    for (const v of product.variants || []) {
-      await tx.insert(schema.productVariants).values({
-        id: v.id,
-        productId: product.id,
-        name: v.name,
-        price: v.price,
-        isDefault: v.isDefault ?? false,
-        sortOrder: v.sortOrder,
-      });
+    const variants = product.variants || [];
+    if (variants.length > 0) {
+      await tx.insert(schema.productVariants).values(
+        variants.map((v) => ({
+          id: v.id,
+          productId: product.id,
+          name: v.name,
+          price: v.price,
+          isDefault: v.isDefault ?? false,
+          sortOrder: v.sortOrder,
+        }))
+      );
     }
   });
   return product;
@@ -904,16 +907,18 @@ export async function saveHeroSlidesPg(slides: HeroSlide[]): Promise<HeroSlide[]
   const conn = assertDb();
   await conn.transaction(async (tx) => {
     await tx.delete(schema.heroSlides);
-    for (const s of slides) {
-      await tx.insert(schema.heroSlides).values({
-        id: s.id,
-        title: s.title,
-        subtitle: s.subtitle,
-        imageUrl: s.imageUrl,
-        actionLink: s.actionLink,
-        sortOrder: s.sortOrder,
-        isActive: s.isActive,
-      });
+    if (slides.length > 0) {
+      await tx.insert(schema.heroSlides).values(
+        slides.map((s) => ({
+          id: s.id,
+          title: s.title,
+          subtitle: s.subtitle,
+          imageUrl: s.imageUrl,
+          actionLink: s.actionLink,
+          sortOrder: s.sortOrder,
+          isActive: s.isActive,
+        }))
+      );
     }
   });
   return slides;
