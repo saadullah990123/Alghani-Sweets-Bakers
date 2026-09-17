@@ -155,8 +155,8 @@ export default function TwoTierCategoryNav({
 
       {/* Subcategory Pills Row (rendered if not hidden) */}
       {!hideSubcategories && subcategories.length > 0 && (
-        <div className="pb-3 pt-1 px-4 sm:px-8 border-t border-white/10 bg-[#2C1405]/60 backdrop-blur-sm">
-          <div className="max-w-[1440px] mx-auto flex items-center justify-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar">
+        <div className="pb-2.5 pt-1 px-2 sm:px-8 border-t border-white/10 bg-[#2C1405]/60 backdrop-blur-sm">
+          <div className="max-w-[1440px] mx-auto flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2.5 overflow-x-auto no-scrollbar py-0.5">
             {/* All pill */}
             <button
               onClick={() => onSelectSubcategory(null)}
