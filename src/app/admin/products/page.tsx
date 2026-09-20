@@ -187,10 +187,12 @@ export default function AdminProductsPage() {
 
   const handleOpenNew = () => {
     const defaultCategoryId = categories[0]?.id || 'cakes';
+    const defaultSubcategoryId = categories.find((category) => category.id === defaultCategoryId)?.subcategories?.[0]?.id;
     setEditingProduct({
       id: `prod-${Date.now()}`,
       name: '',
       categoryId: defaultCategoryId,
+      subcategoryId: defaultSubcategoryId,
       pricingType: 'FIXED',
       basePrice: 500,
       shortDescription: '',
@@ -550,7 +552,11 @@ export default function AdminProductsPage() {
                   </label>
                   <select
                     value={editingProduct.categoryId || categories[0]?.id}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, categoryId: e.target.value })}
+                    onChange={(e) => {
+                      const categoryId = e.target.value;
+                      const firstSubcategoryId = categories.find((category) => category.id === categoryId)?.subcategories?.[0]?.id;
+                      setEditingProduct({ ...editingProduct, categoryId, subcategoryId: firstSubcategoryId });
+                    }}
                     className="w-full text-sm p-3 rounded-xl border border-gray-300 bg-white"
                   >
                     {categories.map((c) => (
@@ -558,6 +564,24 @@ export default function AdminProductsPage() {
                         {c.name}
                       </option>
                     ))}
+                  </select>
+                  <label className="block text-xs font-bold text-gray-700 uppercase mb-1 mt-3">
+                    Subcategory
+                  </label>
+                  <select
+                    value={editingProduct.subcategoryId || ''}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, subcategoryId: e.target.value || undefined })}
+                    className="w-full text-sm p-3 rounded-xl border border-gray-300 bg-white"
+                  >
+                    <option value="">No subcategory</option>
+                    {categories
+                      .find((category) => category.id === editingProduct.categoryId)
+                      ?.subcategories?.filter((subcategory) => subcategory.isActive)
+                      .map((subcategory) => (
+                        <option key={subcategory.id} value={subcategory.id}>
+                          {subcategory.name}
+                        </option>
+                      ))}
                   </select>
                 </div>
 
