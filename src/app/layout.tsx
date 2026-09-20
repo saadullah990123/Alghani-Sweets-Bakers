@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     'Gulab Jamun',
     'Fast Food Pizza Kahuta',
   ],
+  verification: {
+    google: 'CI51_NLyFAiA-_-_uTvU_qfyah1rm-SwItWjIe_NDes',
+  },
   icons: {
     icon: '/images/logo/logo.png',
     shortcut: '/images/logo/logo.png',
