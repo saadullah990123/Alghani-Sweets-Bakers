@@ -33,7 +33,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const TAX_RATE = 0.18; // 18% Tax
+const TAX_RATE = 0; // 0% Tax (removed 18% tax)
 const BASE_DELIVERY_FEE = 150;
 const MIN_ORDER_VALUE = 500;
 const ADVANCE_PERCENTAGE = 30;

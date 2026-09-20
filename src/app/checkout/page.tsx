@@ -319,10 +319,12 @@ export default function CheckoutPage() {
                     <span>Subtotal</span>
                     <span className="font-semibold text-gray-800">{formatPKR(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Tax (18%)</span>
-                    <span className="font-semibold text-gray-800">{formatPKR(taxAmount)}</span>
-                  </div>
+                  {taxAmount > 0 && (
+                    <div className="flex justify-between">
+                      <span>Tax</span>
+                      <span className="font-semibold text-gray-800">{formatPKR(taxAmount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span>Delivery Fee</span>
                     <span className="font-semibold text-gray-800">

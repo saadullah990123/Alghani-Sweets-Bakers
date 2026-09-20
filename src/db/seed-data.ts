@@ -2345,7 +2345,7 @@ export const initialSettings: StoreSettings = {
   email: 'support@alghanisweets.com',
   address: 'Mator Road (near Mator Chowk and the Kahuta bus stand / Safa Plaza) in Kahuta, Pakistan',
   minOrderValue: 500,
-  taxPercentage: 18,
+  taxPercentage: 0,
   deliveryFee: 150,
   additionalDeliveryFee: 0,
   advancePercentage: 30,

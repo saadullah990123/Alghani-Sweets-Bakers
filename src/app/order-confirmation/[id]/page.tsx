@@ -213,10 +213,12 @@ export default function OrderConfirmationPage() {
               <span>Subtotal</span>
               <span className="font-medium text-gray-800">{formatPKR(order?.subtotal || 0)}</span>
             </div>
-            <div className="flex justify-between text-gray-600">
-              <span>Tax (18%)</span>
-              <span className="font-medium text-gray-800">{formatPKR(order?.taxAmount || 0)}</span>
-            </div>
+            {(order?.taxAmount || 0) > 0 && (
+              <div className="flex justify-between text-gray-600">
+                <span>Tax</span>
+                <span className="font-medium text-gray-800">{formatPKR(order?.taxAmount || 0)}</span>
+              </div>
+            )}
             <div className="flex justify-between text-gray-600">
               <span>Delivery Fee</span>
               <span className="font-medium text-gray-800">{formatPKR(order?.deliveryFee || 0)}</span>
