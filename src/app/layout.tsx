@@ -9,11 +9,7 @@ import FloatingActions from '@/components/layout/FloatingActions';
 import OfflineBanner from '@/components/layout/OfflineBanner';
 import { getSettings, getCategories } from '@/db/store';
 
-// Fallback base URL hierarchy: env variable -> live vercel domain -> local fallback
-const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.NEXT_PUBLIC_APP_URL ||
-  'https://alghani-sweets-bakers.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alghanibakers.com';
 
 export const viewport = {
   width: 'device-width',

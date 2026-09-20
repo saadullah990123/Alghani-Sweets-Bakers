@@ -1,9 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://alghani-sweets-bakers.vercel.app'
-  ).replace(/\/$/, '');
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.alghanibakers.com').replace(/\/$/, '');
 
   const routes = [
     '',
