@@ -233,19 +233,28 @@ export default function Header({
             </a>
           </div>
 
-          {/* Center: Official Logo Badge */}
-          <div className="flex items-center justify-center flex-1 min-w-0">
-            <Link href="/" className="flex flex-col items-center group">
-              <div className="relative w-12 h-12 sm:w-20 sm:h-20 shrink-0 transition-transform group-hover:scale-105">
+          {/* Center: Official Logo (shifted slightly to the left) & Brand Name Text */}
+          <div className="flex items-center justify-center flex-1 min-w-0 px-1 sm:px-3">
+            <Link
+              href="/"
+              className="flex items-center gap-2 sm:gap-3.5 group max-w-full"
+              title="Alghani Sweets and Bakers"
+            >
+              {/* Logo moved slightly to the left */}
+              <div className="relative w-9 h-9 sm:w-14 sm:h-14 lg:w-16 lg:h-16 shrink-0 transition-transform group-hover:scale-105">
                 <Image
                   src="/images/logo/logo.png"
-                  alt={businessName}
+                  alt="Alghani Sweets and Bakers"
                   fill
                   sizes="80px"
                   className="object-contain"
                   priority
                 />
               </div>
+              {/* Brand Text in the center of the navigation bar */}
+              <span className="font-serif font-bold text-xs xs:text-sm sm:text-lg md:text-xl lg:text-2xl text-gray-900 tracking-tight group-hover:text-brand-600 transition truncate">
+                Alghani Sweets and Bakers
+              </span>
             </Link>
           </div>
 
