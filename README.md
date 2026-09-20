@@ -5,10 +5,11 @@
 **A full-stack e-commerce web platform for Al-Ghani Sweets & Bakers — a traditional Pakistani sweets, bakery, and fast food brand in Kahuta, Punjab.**
 
 Public storefront with product catalogs, cart & checkout, order tracking, and a secure admin dashboard for managing products, orders, and store settings.
-
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-black?style=for-the-badge&logo=vercel)](https://alghani-sweets-bakers.vercel.app)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-C5F74F?style=for-the-badge&logo=drizzle&logoColor=black)
 ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
@@ -49,14 +50,14 @@ Public storefront with product catalogs, cart & checkout, order tracking, and a 
 
 | Layer | Technology |
 |---|---|
-| Framework | [Next.js](https://nextjs.org/) (App Router) |
-| Language | TypeScript |
-| Database & Storage | [Supabase](https://supabase.com/) (Postgres + object storage for product images) |
-| ORM | [Drizzle ORM](https://orm.drizzle.team/) |
-| Styling | Tailwind CSS |
-| Testing | [Vitest](https://vitest.dev/) |
-| Auth | Session-based admin/staff login |
-| Deployment | Vercel |
+| **Framework** | [Next.js 14](https://nextjs.org/) (App Router) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) |
+| **Database** | PostgreSQL (managed via [Drizzle ORM](https://orm.drizzle.team/)) |
+| **Object Storage** | [Supabase Storage](https://supabase.com/storage) (Product & complaint image uploads) |
+| **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/) & [Lucide React](https://lucide.dev/) |
+| **Authentication** | Secure Cookie Session Auth (`bcryptjs`) |
+| **Testing** | [Vitest](https://vitest.dev/) |
+| **Deployment** | [Vercel](https://vercel.com/) |
 
 ---
 
