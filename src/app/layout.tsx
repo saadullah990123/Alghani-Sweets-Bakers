@@ -9,6 +9,12 @@ import FloatingActions from '@/components/layout/FloatingActions';
 import OfflineBanner from '@/components/layout/OfflineBanner';
 import { getSettings, getCategories } from '@/db/store';
 
+// Fallback base URL hierarchy: env variable -> live vercel domain -> local fallback
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  'https://alghani-sweets-bakers.vercel.app';
+
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -17,8 +23,12 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  title: 'Al-Ghani Sweets & Bakers | Fresh Cakes, Traditional Mithai, Fast Food & Customized Cakes',
+  metadataBase: new URL(baseUrl),
+  title: {
+    default:
+      'Al-Ghani Sweets & Bakers | Fresh Cakes, Traditional Mithai, Fast Food & Customized Cakes',
+    template: '%s | Al-Ghani Sweets & Bakers',
+  },
   description:
     'Order fresh cakes, customized occasion cakes, authentic Pakistani traditional sweets/mithai, pizzas, burgers, and frozen savories online with fast delivery in Kahuta, Punjab.',
   keywords: [
@@ -37,7 +47,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Al-Ghani Sweets & Bakers',
-    description: 'Freshly Baked Delights & Royal Sweets — Fast Home Delivery',
+    description: 'Freshly Baked Delights & Royal Sweets — Fast Home Delivery in Kahuta',
+    url: baseUrl,
+    siteName: 'Al-Ghani Sweets & Bakers',
+    images: [
+      {
+        url: '/images/logo/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Al-Ghani Sweets & Bakers Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Al-Ghani Sweets & Bakers',
+    description: 'Freshly Baked Delights & Royal Sweets — Fast Home Delivery in Kahuta',
     images: ['/images/logo/logo.png'],
   },
 };
