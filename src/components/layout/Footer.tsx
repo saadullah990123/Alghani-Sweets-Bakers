@@ -7,10 +7,12 @@ import {
   Phone,
   Mail,
   MapPin,
+  MessageCircle,
   Facebook,
   Instagram,
   Youtube,
   Linkedin,
+  Music2,
   ChevronDown,
   ChevronUp,
   ShieldCheck,
@@ -20,18 +22,12 @@ import {
 interface FooterProps {
   businessName?: string;
   tagline?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
   aboutText?: string;
 }
 
 export default function Footer({
   businessName = 'Al-Ghani Sweets & Bakers',
   tagline = 'Freshly Baked Delights & Royal Sweets',
-  phone = '042-35800000',
-  email = 'support@alghanisweets.com',
-  address = 'Main Boulevard, Allama Iqbal Town / Gulberg, Lahore, Pakistan',
   aboutText = 'Al-Ghani Sweets & Bakers has been serving freshly baked delights, premium occasion cakes, royal traditional sweets, and mouth-watering fast food for generations. We take pride in using only the finest ingredients, pure desi ghee, and time-tested recipes to bring warmth and happiness to your family celebrations.',
 }: FooterProps) {
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
@@ -88,7 +84,7 @@ export default function Footer({
             {/* Social Media Links */}
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/share/1QWwfNuMwf/"
                 target="_blank"
                 rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-500 hover:text-white flex items-center justify-center transition"
@@ -123,6 +119,15 @@ export default function Footer({
               >
                 <Linkedin className="w-4 h-4" />
               </a>
+              <a
+                href="https://tiktok.com/@alghani.bakers.ka"
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-500 hover:text-white flex items-center justify-center transition"
+                aria-label="TikTok"
+              >
+                <Music2 className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
@@ -134,24 +139,44 @@ export default function Footer({
             <ul className="space-y-2.5 text-xs text-amber-100/90">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                <span>{address}</span>
+                <div className="space-y-1">
+                  <p className="font-semibold text-amber-200">Branch 1</p>
+                  <p>Almalik Plaza, Channi Bazar, Kahuta</p>
+                  <a href="tel:03325556547" className="hover:text-amber-300 inline-flex items-center py-1">
+                    <Phone className="w-3.5 h-3.5 mr-1" />
+                    03325556547
+                  </a>
+                </div>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-brand-400 shrink-0" />
-                <a
-                  href={`tel:${phone.replace(/\s+/g, '')}`}
-                  className="hover:text-amber-300 inline-flex items-center py-2.5 -my-2.5"
-                >
-                  {phone}
-                </a>
+              <li className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <p className="font-semibold text-amber-200">Branch 2</p>
+                  <p>Safa Plaza, near main bus stand, Matore Road, Kahuta</p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <a href="tel:03005588039" className="hover:text-amber-300 inline-flex items-center py-1">
+                      <Phone className="w-3.5 h-3.5 mr-1" />
+                      03005588039
+                    </a>
+                    <a
+                      href="https://wa.me/923005588039"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-amber-300 inline-flex items-center py-1"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 mr-1" />
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-brand-400 shrink-0" />
                 <a
-                  href={`mailto:${email}`}
+                  href="mailto:mluqman.ramzan@gmail.com"
                   className="hover:text-amber-300 inline-flex items-center py-2.5 -my-2.5"
                 >
-                  {email}
+                  mluqman.ramzan@gmail.com
                 </a>
               </li>
             </ul>
