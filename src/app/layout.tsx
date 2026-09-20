@@ -78,9 +78,6 @@ export default async function RootLayout({
             <Footer
               businessName={settings.businessName}
               tagline={settings.tagline}
-              phone={settings.phone}
-              email={settings.email}
-              address={settings.address}
               aboutText={settings.aboutText}
             />
           </LocationProvider>
