@@ -15,7 +15,6 @@ import {
   Music2,
   ChevronDown,
   ChevronUp,
-  ShieldCheck,
   Heart,
 } from 'lucide-react';
 
@@ -221,12 +220,6 @@ export default function Footer({
               <li>
                 <Link href="/support" className="hover:text-brand-400 transition">
                   Support &amp; Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-brand-400 transition flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-brand-400" />
-                  <span>Admin & Staff Portal</span>
                 </Link>
               </li>
             </ul>

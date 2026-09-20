@@ -61,7 +61,8 @@ const PUBLIC_ADMIN_API = [
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const isAdminPage = pathname.startsWith('/admin') && !PUBLIC_ADMIN_PAGES.includes(pathname);
+  const isAdminPage =
+    (pathname === '/admin' || pathname.startsWith('/admin/')) && !PUBLIC_ADMIN_PAGES.includes(pathname);
   const isAdminApi = pathname.startsWith('/api/admin') && !PUBLIC_ADMIN_API.includes(pathname);
 
   if (!isAdminPage && !isAdminApi) {
