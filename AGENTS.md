@@ -1,4 +1,4 @@
-﻿# Al-Ghani Sweets & Bakers — Agent Context File
+# Al-Ghani Sweets & Bakers — Agent Context File
 
 > This file is auto-loaded by AI coding assistants (Antigravity, Claude, etc.) to understand the full project context before making changes. Keep it updated as the project evolves — an out-of-date context file is worse than none, because it actively misleads the next change. **Update this file in the same session as any change to categories, routes, colors, or the data model.**
 
@@ -69,9 +69,13 @@ Four categories have their own route with sequential sub-banner sections (banner
 
 | Route | categoryId | Sections |
 |---|---|---|
+| `/sweets` | `sweets` | Traditional Sweets & Halwajat |
 | `/cakes` | `cakes` | Classic Cakes, Dry Cakes, Dream Cakes |
+| `/customized-cakes` | `customized-cakes` | Wedding & Nikkah, Kids & Theme Cakes, Milestones |
 | `/fast-food` | `fast-food` | Salads & Sandwiches, Burgers, Pizza, Fast Food / Broast |
+| `/desserts` | `desserts` | Glazed Donuts, Cupcakes, Pastries |
 | `/biscuits-cookies` | `biscuits` | Biscuits, Packed Biscuits & Cookies |
+| `/frozen` | `frozen` | Frozen Savories & Flatbreads |
 | `/gift-essentials` | `deals-treasure` | Gift Hampers, Premium Sweet Boxes, Family Combos & Hi-Tea Platters |
 
 Shared rendering component: `src/components/category/CategoryLandingView.tsx`. Each page (`src/app/<route>/page.tsx`) is a server component that:
