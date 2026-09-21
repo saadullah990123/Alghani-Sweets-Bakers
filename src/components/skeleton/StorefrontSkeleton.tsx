@@ -62,7 +62,7 @@ function ProductCardSkeleton() {
             <Skeleton className="h-3 w-10" rounded="rounded-md" />
             <Skeleton className="h-5 w-20" rounded="rounded-md" />
           </div>
-          <Skeleton className="h-10 w-20 sm:w-24" rounded="rounded-xl" />
+          <Skeleton className="h-8 sm:h-10 w-16 sm:w-24" rounded="rounded-lg sm:rounded-xl" />
         </div>
       </div>
     </div>

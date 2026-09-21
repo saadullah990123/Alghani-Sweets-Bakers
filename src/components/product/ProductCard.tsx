@@ -145,15 +145,15 @@ function ProductCard({
 
         {/* Type B Variant Selection Pills (Shown directly on card - Section 3) */}
         {product.pricingType === 'VARIANT' && variants.length > 0 && !product.isCustomizable && (
-          <div className="pt-1">
-            <div className="flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+          <div className="pt-0.5">
+            <div className="flex flex-wrap gap-1 sm:gap-1.5" onClick={(e) => e.stopPropagation()}>
               {variants.map((v) => {
                 const isSelected = selectedVariant?.id === v.id;
                 return (
                   <button
                     key={v.id}
                     onClick={(e) => handleVariantSelect(e, v)}
-                    className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    className={`px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-[11px] font-bold transition-all ${
                       isSelected
                         ? 'bg-brand-dark text-white shadow-sm scale-105'
                         : 'bg-brand-50/80 text-brand-900 border border-brand-200 hover:bg-brand-100'
@@ -168,12 +168,12 @@ function ProductCard({
         )}
 
         {/* Price & Action Row */}
-        <div className="pt-2 flex items-center justify-between border-t border-gray-100">
-          <div>
-            <span className="text-[11px] text-gray-400 font-medium block">
+        <div className="pt-2 flex items-center justify-between border-t border-gray-100 gap-1.5 sm:gap-2">
+          <div className="min-w-0 flex flex-col justify-center">
+            <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium block leading-none mb-0.5">
               {product.pricingType === 'VARIANT' && !selectedVariant ? 'From' : 'Price'}
             </span>
-            <span className="text-base sm:text-lg font-extrabold text-brand-600 tracking-tight">
+            <span className="text-sm sm:text-lg font-extrabold text-brand-600 tracking-tight block truncate leading-tight">
               {formatPKR(currentPrice)}
             </span>
           </div>
@@ -182,7 +182,7 @@ function ProductCard({
           <button
             onClick={handleQuickAdd}
             disabled={isSoldOut}
-            className={`min-h-[40px] px-3.5 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all shadow-sm ${
+            className={`h-8 sm:h-10 px-2.5 sm:px-4 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5 transition-all shadow-sm shrink-0 active:scale-95 ${
               isSoldOut
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                 : addedToast
@@ -196,17 +196,17 @@ function ProductCard({
               <span>Sold Out</span>
             ) : addedToast ? (
               <>
-                <Check className="w-4 h-4" />
+                <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>Added</span>
               </>
             ) : product.isCustomizable ? (
               <>
                 <span>Customize</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </>
             ) : (
               <>
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>ADD</span>
               </>
             )}
