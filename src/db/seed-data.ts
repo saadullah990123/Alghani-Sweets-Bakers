@@ -2351,7 +2351,7 @@ export const initialSettings: StoreSettings = {
   advancePercentage: 30,
   aboutText: 'Al-Ghani Sweets & Bakers has been serving freshly baked delights, premium occasion cakes, royal traditional sweets, and mouth-watering fast food for generations. We take pride in using only the finest ingredients, pure desi ghee, and time-tested recipes to bring warmth and happiness to your family celebrations.',
   facebookUrl: 'https://facebook.com/alghanibakers',
-  instagramUrl: 'https://instagram.com/alghanibakers',
+  instagramUrl: '#',
   youtubeUrl: 'https://youtube.com',
   linkedinUrl: 'https://linkedin.com',
   easypaisaTitle: 'Al-Ghani Sweets',
