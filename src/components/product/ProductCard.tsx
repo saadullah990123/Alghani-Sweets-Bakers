@@ -131,13 +131,13 @@ function ProductCard({
       </div>
 
       {/* Product Content */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5">
-        <div>
-          <h3 className="font-bold text-sm sm:text-base text-gray-900 group-hover:text-brand-700 transition leading-snug line-clamp-2">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+        <div className="space-y-1">
+          <h3 className="font-bold text-xs sm:text-base text-gray-900 group-hover:text-brand-700 transition leading-snug line-clamp-2">
             {product.name}
           </h3>
           {product.shortDescription && (
-            <p className="text-xs text-gray-500 line-clamp-2 mt-1 leading-relaxed">
+            <p className="text-[11px] sm:text-xs text-gray-500 line-clamp-2 leading-relaxed">
               {product.shortDescription}
             </p>
           )}
@@ -153,7 +153,7 @@ function ProductCard({
                   <button
                     key={v.id}
                     onClick={(e) => handleVariantSelect(e, v)}
-                    className={`px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-[11px] font-bold transition-all ${
+                    className={`px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-bold transition-all ${
                       isSelected
                         ? 'bg-brand-dark text-white shadow-sm scale-105'
                         : 'bg-brand-50/80 text-brand-900 border border-brand-200 hover:bg-brand-100'
@@ -168,27 +168,27 @@ function ProductCard({
         )}
 
         {/* Price & Action Row */}
-        <div className="pt-2 flex items-center justify-between border-t border-gray-100 gap-1.5 sm:gap-2">
+        <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-gray-100 gap-1 sm:gap-2">
           <div className="min-w-0 flex flex-col justify-center">
             <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium block leading-none mb-0.5">
               {product.pricingType === 'VARIANT' && !selectedVariant ? 'From' : 'Price'}
             </span>
-            <span className="text-sm sm:text-lg font-extrabold text-brand-600 tracking-tight block truncate leading-tight">
+            <span className="text-[13px] sm:text-base font-extrabold text-brand-600 tracking-tight block whitespace-nowrap leading-tight">
               {formatPKR(currentPrice)}
             </span>
           </div>
 
-          {/* Action ADD Button */}
+          {/* Action ADD / Customize Button */}
           <button
             onClick={handleQuickAdd}
             disabled={isSoldOut}
-            className={`h-8 sm:h-10 px-2.5 sm:px-4 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5 transition-all shadow-sm shrink-0 active:scale-95 ${
+            className={`h-[30px] sm:h-9 px-2 sm:px-3.5 rounded-lg sm:rounded-xl font-bold text-[11px] sm:text-xs flex items-center gap-0.5 sm:gap-1 transition-all shadow-sm shrink-0 active:scale-95 ${
               isSoldOut
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                 : addedToast
                 ? 'bg-green-600 text-white shadow-green-500/30 scale-105'
                 : product.isCustomizable
-                ? 'bg-purple-700 hover:bg-purple-800 text-white'
+                ? 'bg-purple-700 hover:bg-purple-800 text-white shadow-purple-600/20'
                 : 'bg-brand-600 hover:bg-brand-700 text-white hover:shadow-md'
             }`}
           >
@@ -202,7 +202,7 @@ function ProductCard({
             ) : product.isCustomizable ? (
               <>
                 <span>Customize</span>
-                <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </>
             ) : (
               <>
