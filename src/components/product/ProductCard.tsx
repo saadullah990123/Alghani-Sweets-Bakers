@@ -168,12 +168,12 @@ function ProductCard({
         )}
 
         {/* Price & Action Row */}
-        <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-gray-100 gap-1 sm:gap-2">
-          <div className="min-w-0 flex flex-col justify-center">
-            <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium block leading-none mb-0.5">
+        <div className="mt-auto pt-2.5 flex flex-row items-center justify-between border-t border-gray-100 gap-1.5 sm:gap-2">
+          <div className="flex flex-col justify-center min-w-0 pr-1">
+            <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium block leading-none mb-0.5 whitespace-nowrap">
               {product.pricingType === 'VARIANT' && !selectedVariant ? 'From' : 'Price'}
             </span>
-            <span className="text-[13px] sm:text-base font-extrabold text-brand-600 tracking-tight block whitespace-nowrap leading-tight">
+            <span className="text-[12px] sm:text-base font-extrabold text-brand-600 tracking-tight block whitespace-nowrap leading-tight">
               {formatPKR(currentPrice)}
             </span>
           </div>
@@ -182,7 +182,7 @@ function ProductCard({
           <button
             onClick={handleQuickAdd}
             disabled={isSoldOut}
-            className={`h-[30px] sm:h-9 px-2 sm:px-3.5 rounded-lg sm:rounded-xl font-bold text-[11px] sm:text-xs flex items-center gap-0.5 sm:gap-1 transition-all shadow-sm shrink-0 active:scale-95 ${
+            className={`h-[28px] sm:h-9 px-2 sm:px-3 rounded-lg sm:rounded-xl font-bold text-[10.5px] sm:text-xs flex items-center gap-0.5 sm:gap-1 transition-all shadow-sm shrink-0 active:scale-95 ${
               isSoldOut
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
                 : addedToast
