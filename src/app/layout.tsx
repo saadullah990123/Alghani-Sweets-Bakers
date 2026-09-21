@@ -40,9 +40,14 @@ export const metadata: Metadata = {
     google: 'CI51_NLyFAiA-_-_uTvU_qfyah1rm-SwItWjIe_NDes',
   },
   icons: {
-    icon: '/images/logo/logo.png',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/images/logo/logo.png', sizes: '192x192', type: 'image/png' },
+    ],
     shortcut: '/images/logo/logo.png',
-    apple: '/images/logo/logo.png',
+    apple: [
+      { url: '/images/logo/logo.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
   openGraph: {
     title: 'Al-Ghani Sweets & Bakers',
