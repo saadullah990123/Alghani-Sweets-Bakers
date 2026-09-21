@@ -17,19 +17,30 @@ interface StorefrontViewProps {
   categories: Category[];
   products: Product[];
   heroSlides: HeroSlide[];
+  initialCategoryId?: string;
+  initialSubcategoryId?: string | null;
+  initialSearchQuery?: string;
 }
 
 export default function StorefrontView({
   categories,
   products,
   heroSlides,
+  initialCategoryId,
+  initialSubcategoryId = null,
+  initialSearchQuery = '',
 }: StorefrontViewProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
-    categories.find((c) => c.id === 'sweets')?.id || categories[0]?.id || 'sweets'
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(() => {
+    if (initialCategoryId && categories.some((c) => c.id === initialCategoryId)) {
+      return initialCategoryId;
+    }
+    return categories.find((c) => c.id === 'sweets')?.id || categories[0]?.id || 'sweets';
+  });
+  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(
+    initialSubcategoryId || null
   );
-  const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery || '');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialSearchQuery || '');
 
   // Debounce search query so fast typing doesn't re-filter large arrays on every keystroke
   useEffect(() => {
@@ -37,32 +48,26 @@ export default function StorefrontView({
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Supports deep-linking a category/subcategory from outside this
-  // component — e.g. the mobile nav drawer in Header.tsx links to
-  // `/?category=<id>&subcategory=<id>` for the categories that don't have
-  // their own dedicated page. This intentionally runs in an effect (after
-  // the initial render), not as the useState initializer — reading
-  // window.location during the initial render would make the server-
-  // rendered HTML (which has no `window`) disagree with the client's first
-  // render, causing a React hydration mismatch. Running it as an effect
-  // means the page briefly shows its normal default category first, then
-  // switches to the deep-linked one — a one-time client-side redirect
-  // rather than a hydration hazard. Only runs once on mount, not a fully
-  // URL-driven filter state.
+  // Supports deep-linking / live sync of category/subcategory params
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const categoryParam = params.get('category');
-    const subcategoryParam = params.get('subcategory');
-    const qParam = params.get('q') || params.get('search');
-    if (categoryParam && categories.some((c) => c.id === categoryParam)) {
-      setSelectedCategoryId(categoryParam);
-      setSelectedSubcategoryId(subcategoryParam || null);
-    }
-    if (qParam) {
-      setSearchQuery(qParam);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const categoryParam = params.get('category');
+      const subcategoryParam = params.get('subcategory');
+      const qParam = params.get('q') || params.get('search');
+      if (categoryParam && categories.some((c) => c.id === categoryParam)) {
+        setSelectedCategoryId(categoryParam);
+        setSelectedSubcategoryId(subcategoryParam || null);
+      }
+      if (qParam !== null) {
+        setSearchQuery(qParam);
+      }
+    };
+
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    return () => window.removeEventListener('popstate', syncFromUrl);
+  }, [categories]);
 
   // Modals state
   const [activeDetailProduct, setActiveDetailProduct] = useState<Product | null>(null);
@@ -86,9 +91,7 @@ export default function StorefrontView({
     }
 
     // Category filter — STRICT isolation: a tab only ever shows products
-    // whose categoryId matches exactly. No cross-category leakage via
-    // isPopular/isFeatured flags, so "Sweets" items can never appear while
-    // browsing "Fast Food & Deals" or any other category.
+    // whose categoryId matches exactly.
     if (selectedCategoryId) {
       result = result.filter((p) => p.categoryId === selectedCategoryId);
     }
@@ -104,11 +107,19 @@ export default function StorefrontView({
   const activeCategory = categories.find((c) => c.id === selectedCategoryId) || categories[0];
   const activeSubcategory = activeCategory?.subcategories?.find((s) => s.id === selectedSubcategoryId);
 
-  // Dynamic Category & Subcategory Banner Image
-  const bannerUrl =
-    activeSubcategory?.bannerUrl ||
-    activeCategory?.bannerUrl ||
-    '/images/hero/traditional-sweets-banner.webp';
+  // Dynamic Category & Subcategory Banner Image resolution
+  // STRICT RULE: Only show "Traditional Sweets" banner if category is sweets or traditional-sweets.
+  // For other categories, render their specific banner image or hide section if no banner is set.
+  const isSweetsCategory = selectedCategoryId === 'sweets' || selectedCategoryId === 'traditional-sweets';
+
+  const rawBannerUrl = activeSubcategory?.bannerUrl || activeCategory?.bannerUrl;
+  const bannerUrl = rawBannerUrl
+    ? rawBannerUrl.includes('traditional-sweets-banner') && !isSweetsCategory
+      ? null
+      : rawBannerUrl
+    : isSweetsCategory
+    ? '/images/hero/traditional-sweets-banner.webp'
+    : null;
 
   const bannerAlt = activeSubcategory
     ? `${activeSubcategory.name} Banner`
@@ -140,19 +151,21 @@ export default function StorefrontView({
       </div>
 
       {/* 4. DYNAMIC REQUIREMENT: Relevant Category & Subcategory Banner right after Search Bar */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 my-3">
-        <div className="relative w-full h-[120px] sm:h-[180px] md:h-[220px] lg:h-[260px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-amber-200/60 bg-white">
-          <Image
-            key={bannerUrl}
-            src={bannerUrl}
-            alt={bannerAlt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center transition-opacity duration-300"
-          />
+      {bannerUrl && (
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 my-3">
+          <div className="relative w-full h-[120px] sm:h-[180px] md:h-[220px] lg:h-[260px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-amber-200/60 bg-white">
+            <Image
+              key={bannerUrl}
+              src={bannerUrl}
+              alt={bannerAlt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center transition-opacity duration-300"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 5. Products Grid Section */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">

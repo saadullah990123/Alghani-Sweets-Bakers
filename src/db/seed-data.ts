@@ -36,13 +36,13 @@ export const initialCategories: Category[] = [
     name: 'Customized Cakes',
     slug: 'customized-cakes',
     icon: 'Palette',
-    bannerUrl: '/images/hero/cruisel img2.jpg',
+    bannerUrl: '/images/customize-cake/mainimage.jpg',
     sortOrder: 3,
     isActive: true,
     subcategories: [
-      { id: 'sub-wedding-cakes', categoryId: 'customized-cakes', name: 'Wedding & Nikkah', slug: 'wedding-nikkah', bannerUrl: '/images/hero/cruisel img2.jpg', sortOrder: 1, isActive: true },
-      { id: 'sub-kids-cakes', categoryId: 'customized-cakes', name: 'Kids & Theme Cakes', slug: 'kids-theme-cakes', bannerUrl: '/images/hero/cruisel img2.jpg', sortOrder: 2, isActive: true },
-      { id: 'sub-anniversary-cakes', categoryId: 'customized-cakes', name: 'Milestones & Celebration', slug: 'milestones-celebration', bannerUrl: '/images/hero/cruisel img2.jpg', sortOrder: 3, isActive: true },
+      { id: 'sub-wedding-cakes', categoryId: 'customized-cakes', name: 'Wedding & Nikkah', slug: 'wedding-nikkah', bannerUrl: '/images/customize-cake/nikkah.jpg', sortOrder: 1, isActive: true },
+      { id: 'sub-kids-cakes', categoryId: 'customized-cakes', name: 'Kids & Theme Cakes', slug: 'kids-theme-cakes', bannerUrl: '/images/customize-cake/bossbaby.jpg', sortOrder: 2, isActive: true },
+      { id: 'sub-anniversary-cakes', categoryId: 'customized-cakes', name: 'Milestones & Celebration', slug: 'milestones-celebration', bannerUrl: '/images/customize-cake/flower.jpg', sortOrder: 3, isActive: true },
     ]
   },
   {

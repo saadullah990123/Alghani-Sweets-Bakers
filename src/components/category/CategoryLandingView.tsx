@@ -127,42 +127,83 @@ export default function CategoryLandingView({
     }
   };
 
+  // Active subcategory from DB
+  const activeSubcategory = subcategories.find((s) => s.id === selectedSubcategoryId);
+
+  // Dynamic hero image resolution:
+  // Use subcategory banner if selected, otherwise fallback to category heroImage / bannerUrl.
+  // Never show traditional-sweets-banner on non-sweets category routes.
+  const isSweetsCategory = categoryId === 'sweets' || categoryId === 'traditional-sweets';
+
+  const rawHeroImage = activeSubcategory?.bannerUrl || heroImage || currentCategory?.bannerUrl;
+  const effectiveHeroImage = rawHeroImage
+    ? rawHeroImage.includes('traditional-sweets-banner') && !isSweetsCategory
+      ? null
+      : rawHeroImage
+    : isSweetsCategory
+    ? '/images/hero/traditional-sweets-banner.webp'
+    : null;
+
   return (
     <div className="w-full pb-20 bg-gray-50/40">
       {/* =========================================================================
           1. CATEGORY HERO BANNER (Category cover photo + title + stats)
           ========================================================================= */}
-      <div className="relative w-full h-[180px] sm:h-[240px] md:h-[300px] overflow-hidden">
-        <Image
-          src={heroImage}
-          alt={pageTitle}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-5 sm:pb-8 text-center px-4">
+      {effectiveHeroImage ? (
+        <div className="relative w-full h-[180px] sm:h-[240px] md:h-[300px] overflow-hidden">
+          <Image
+            key={effectiveHeroImage}
+            src={effectiveHeroImage}
+            alt={pageTitle}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-5 sm:pb-8 text-center px-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400 text-black text-[11px] font-extrabold uppercase tracking-wider mb-2 shadow-md">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Al-Ghani Specialty</span>
+            </span>
+            <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
+              {pageTitle}
+            </h1>
+            {pageTagline && (
+              <p className="text-xs sm:text-sm md:text-base text-amber-100 font-medium mt-1 max-w-xl drop-shadow">
+                {pageTagline}
+              </p>
+            )}
+            <div className="mt-2.5 flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-gray-800 shadow-sm">
+                <Award className="w-3.5 h-3.5 text-brand-600" />
+                <span>{allCategoryProducts.length} Items Available</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full bg-[#3D1E0B] text-white py-8 sm:py-12 text-center px-4 shadow-md">
           <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-400 text-black text-[11px] font-extrabold uppercase tracking-wider mb-2 shadow-md">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Al-Ghani Specialty</span>
           </span>
-          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-extrabold text-white drop-shadow-lg">
+          <h1 className="font-serif text-2xl sm:text-4xl font-extrabold text-white">
             {pageTitle}
           </h1>
           {pageTagline && (
-            <p className="text-xs sm:text-sm md:text-base text-amber-100 font-medium mt-1 max-w-xl drop-shadow">
+            <p className="text-xs sm:text-sm text-amber-100 font-medium mt-1 max-w-xl mx-auto">
               {pageTagline}
             </p>
           )}
-          <div className="mt-2.5 flex items-center gap-2">
+          <div className="mt-3 flex items-center justify-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-bold text-gray-800 shadow-sm">
               <Award className="w-3.5 h-3.5 text-brand-600" />
               <span>{allCategoryProducts.length} Items Available</span>
             </span>
           </div>
         </div>
-      </div>
+      )}
 
       {/* =========================================================================
           2. DARK BROWN CATEGORY BAR (Sticky horizontally scrollable category bar #3D1E0B)

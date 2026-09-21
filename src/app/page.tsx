@@ -6,7 +6,11 @@ import StorefrontView from '@/components/home/StorefrontView';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: { category?: string; subcategory?: string; q?: string; search?: string };
+}) {
   const [categories, products, heroSlides] = await Promise.all([
     getCategories(),
     getProducts(),
@@ -18,6 +22,9 @@ export default async function HomePage() {
       categories={categories}
       products={products}
       heroSlides={heroSlides}
+      initialCategoryId={searchParams?.category}
+      initialSubcategoryId={searchParams?.subcategory}
+      initialSearchQuery={searchParams?.q || searchParams?.search}
     />
   );
 }

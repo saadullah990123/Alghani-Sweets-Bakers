@@ -23,6 +23,7 @@ import {
 export const DEDICATED_CATEGORY_ROUTES: Record<string, string> = {
   sweets: '/sweets',
   cakes: '/cakes',
+  'customized-cakes': '/customized-cakes',
   'fast-food': '/fast-food',
   desserts: '/desserts',
   biscuits: '/biscuits-cookies',

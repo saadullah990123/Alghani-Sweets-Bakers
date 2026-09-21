@@ -92,8 +92,27 @@ function ensureDataFile(): StoreData {
       if (!Array.isArray(parsed.complaints)) {
         parsed.complaints = [];
       }
-      // Ensure any new setting fields (e.g. payment account details) exist
-      parsed.settings = { ...initialSettings, ...parsed.settings };
+      // Migration: Ensure customized-cakes has proper customized cake banner URLs
+      if (Array.isArray(parsed.categories)) {
+        const custCat = parsed.categories.find((c) => c.id === 'customized-cakes');
+        if (
+          custCat &&
+          (!custCat.bannerUrl ||
+            custCat.bannerUrl.includes('cruisel img2') ||
+            custCat.bannerUrl.includes('traditional-sweets'))
+        ) {
+          custCat.bannerUrl = '/images/customize-cake/mainimage.jpg';
+          if (Array.isArray(custCat.subcategories)) {
+            const wedSub = custCat.subcategories.find((s) => s.id === 'sub-wedding-cakes');
+            if (wedSub) wedSub.bannerUrl = '/images/customize-cake/nikkah.jpg';
+            const kidsSub = custCat.subcategories.find((s) => s.id === 'sub-kids-cakes');
+            if (kidsSub) kidsSub.bannerUrl = '/images/customize-cake/bossbaby.jpg';
+            const annSub = custCat.subcategories.find((s) => s.id === 'sub-anniversary-cakes');
+            if (annSub) annSub.bannerUrl = '/images/customize-cake/flower.jpg';
+          }
+        }
+      }
+
       cachedData = parsed;
       return parsed;   // return parsed, not cachedData
     }
