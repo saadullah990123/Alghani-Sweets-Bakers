@@ -229,7 +229,7 @@ export default function Footer({
               Payment Methods
             </h4>
             <p className="text-xs text-amber-200/70">
-              We accept Cash on Delivery, JazzCash, Easypaisa, Meezan Bank transfer, and Online Debit/Credit cards.
+              We accept Cash on Delivery, JazzCash, Easypaisa, Bank Islami transfer, and Online Debit/Credit cards.
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               <span className="px-2.5 py-1 rounded bg-white/10 text-white font-bold text-[11px]">
@@ -242,7 +242,7 @@ export default function Footer({
                 Easypaisa
               </span>
               <span className="px-2.5 py-1 rounded bg-blue-900/60 text-blue-200 font-bold text-[11px]">
-                Meezan Bank
+                Bank Islami
               </span>
             </div>
           </div>
