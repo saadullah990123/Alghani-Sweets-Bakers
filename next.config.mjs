@@ -29,6 +29,25 @@ const nextConfig = {
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+  async redirects() {
+    return [
+      {
+        source: '/customized%20cakes',
+        destination: '/customized-cakes',
+        permanent: true,
+      },
+      {
+        source: '/customized-cake',
+        destination: '/customized-cakes',
+        permanent: true,
+      },
+      {
+        source: '/customized%20cake',
+        destination: '/customized-cakes',
+        permanent: true,
+      },
+    ];
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

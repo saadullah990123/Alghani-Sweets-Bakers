@@ -6,6 +6,8 @@ import { getProductFallbackImage } from '@/lib/utils';
 const storefrontProductPaths = [
   '/',
   '/cakes',
+  '/customized-cakes',
+  '/customized-cake',
   '/fast-food',
   '/fastfood',
   '/biscuits-cookies',
@@ -31,6 +33,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     if (!body.name || !body.categoryId) {
       return NextResponse.json({ error: 'Product name and category required' }, { status: 400 });
+    }
+
+    if (body.categoryId === 'customized-cakes' && !body.isCustomizable) {
+      return NextResponse.json({ error: 'Products in the Customized Cakes category must have the "Mark as Customizable Cake" flag enabled.' }, { status: 400 });
     }
 
     // If no image was supplied, inherit the parent category/subcategory
@@ -61,9 +67,9 @@ export async function POST(req: NextRequest) {
       console.warn('Revalidation warning:', e);
     }
     return NextResponse.json(saved, { status: 201 });
-  } catch (err) {
-    console.error('Failed to save product:', err);
-    return NextResponse.json({ error: 'Failed to save product' }, { status: 500 });
+  } catch (err: any) {
+    console.error('Failed to save product details:', err);
+    return NextResponse.json({ error: err?.message || 'Failed to save product' }, { status: 500 });
   }
 }
 

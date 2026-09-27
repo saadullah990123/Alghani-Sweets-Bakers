@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Product, Category, PricingType, ProductVariant } from '@/lib/types';
 import { formatPKR, getProductFallbackImage } from '@/lib/utils';
+import { parseWeightLbs } from '@/lib/customizationDefaults';
 import AdminErrorBanner from '@/components/admin/AdminErrorBanner';
 import {
   Plus,
@@ -121,7 +122,6 @@ export default function AdminProductsPage() {
     const filtered = allCandidateImages.filter(
       (img) =>
         img === currentImg ||
-        uploadedImages.includes(img) ||
         categoryProductImages.includes(img) ||
         folders.some((f) => img.includes(`/${f}/`)) ||
         img.includes(`/products/${categoryId}/`) ||
@@ -245,6 +245,43 @@ export default function AdminProductsPage() {
       return;
     }
 
+    const isCustomizedCake = editingProduct.categoryId === 'customized-cakes' || !!editingProduct.isCustomizable;
+    const effectivePricingType: PricingType = isCustomizedCake ? 'VARIANT' : (editingProduct.pricingType as PricingType) || 'FIXED';
+
+    // Validate 3 LBS minimum requirement for customized cakes
+    if (isCustomizedCake && variantsList.length > 0) {
+      for (const v of variantsList) {
+        const lbs = parseWeightLbs(v.name);
+        if (lbs !== null && lbs < 3) {
+          alert(`Weight variant "${v.name}" violates the 3 LBS minimum order requirement for Customized Cakes. Please specify 3 LBS or higher.`);
+          return;
+        }
+      }
+    }
+
+    // Auto-sync basePrice to starting (lowest weight >= 3 LBS) variant price for Customized Cakes & Variant products
+    let syncedBasePrice = Number(editingProduct.basePrice) || 0;
+    if (variantsList.length > 0 && (effectivePricingType === 'VARIANT' || isCustomizedCake)) {
+      const validVariants = isCustomizedCake
+        ? variantsList.filter((v) => {
+          const lbs = parseWeightLbs(v.name);
+          return lbs === null || lbs >= 3;
+        })
+        : variantsList;
+
+      const sortedVariants = [...(validVariants.length > 0 ? validVariants : variantsList)].sort((a, b) => {
+        const wA = parseWeightLbs(a.name) ?? Infinity;
+        const wB = parseWeightLbs(b.name) ?? Infinity;
+        if (wA !== wB) return wA - wB;
+        return a.price - b.price;
+      });
+
+      const startingVariant = sortedVariants.find((v) => v.isDefault) || sortedVariants[0];
+      if (startingVariant && startingVariant.price > 0) {
+        syncedBasePrice = startingVariant.price;
+      }
+    }
+
     setIsSaving(true);
     setFeedbackError('');
     try {
@@ -254,8 +291,8 @@ export default function AdminProductsPage() {
         slug: editingProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
         categoryId: editingProduct.categoryId,
         subcategoryId: editingProduct.subcategoryId,
-        pricingType: (editingProduct.pricingType as PricingType) || 'FIXED',
-        basePrice: Number(editingProduct.basePrice) || 0,
+        pricingType: effectivePricingType,
+        basePrice: syncedBasePrice,
         packInfo: editingProduct.packInfo || undefined,
         shortDescription: editingProduct.shortDescription || '',
         fullDescription: editingProduct.fullDescription || '',
@@ -263,13 +300,13 @@ export default function AdminProductsPage() {
           editingProduct.images && editingProduct.images.length > 0
             ? editingProduct.images
             : [getProductFallbackImage(editingProduct.categoryId, editingProduct.subcategoryId, categories)],
-          imageScale: Math.max(60, Math.min(140, Number(editingProduct.imageScale) || 100)),
-        isCustomizable: !!editingProduct.isCustomizable,
+        imageScale: Math.max(60, Math.min(140, Number(editingProduct.imageScale) || 100)),
+        isCustomizable: isCustomizedCake,
         isFeatured: !!editingProduct.isFeatured,
         isPopular: !!editingProduct.isPopular,
         isAvailable: editingProduct.isAvailable !== false,
         sortOrder: Number(editingProduct.sortOrder) || 1,
-        variants: editingProduct.pricingType === 'VARIANT' ? variantsList : undefined,
+        variants: effectivePricingType === 'VARIANT' ? variantsList : undefined,
       };
 
       const res = await fetch('/api/admin/products', {
@@ -402,112 +439,111 @@ export default function AdminProductsPage() {
             {filteredProducts
               .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
               .map((p) => {
-          const categoryName = categories.find((c) => c.id === p.categoryId)?.name || p.categoryId;
-          return (
-            <div
-              key={p.id}
-              className="bg-white p-4 rounded-3xl border border-gray-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
-            >
-              <div className="flex gap-3">
-                <div className="relative w-20 h-20 rounded-2xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
-                  <Image
-                    src={p.images[0] || getProductFallbackImage(p.categoryId, p.subcategoryId, categories)}
-                    alt={p.name}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded">
-                    {categoryName}
-                  </span>
-                  <h3 className="font-bold text-sm text-gray-900 mt-1 line-clamp-1">{p.name}</h3>
-                  <p className="text-xs text-gray-500 line-clamp-1">{p.shortDescription}</p>
-                  <div className="mt-1 flex items-center gap-2">
-                    <span className="text-xs font-extrabold text-brand-dark">
-                      {p.pricingType === 'VARIANT' ? 'From ' : ''}
-                      {formatPKR(p.variants?.[0]?.price || p.basePrice)}
-                    </span>
-                    <span className="text-[10px] text-gray-400 font-semibold uppercase">
-                      Type {p.pricingType}
-                    </span>
+                const categoryName = categories.find((c) => c.id === p.categoryId)?.name || p.categoryId;
+                return (
+                  <div
+                    key={p.id}
+                    className="bg-white p-4 rounded-3xl border border-gray-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3"
+                  >
+                    <div className="flex gap-3">
+                      <div className="relative w-20 h-20 rounded-2xl bg-gray-100 overflow-hidden shrink-0 border border-gray-100">
+                        <Image
+                          src={p.images[0] || getProductFallbackImage(p.categoryId, p.subcategoryId, categories)}
+                          alt={p.name}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded">
+                          {categoryName}
+                        </span>
+                        <h3 className="font-bold text-sm text-gray-900 mt-1 line-clamp-1">{p.name}</h3>
+                        <p className="text-xs text-gray-500 line-clamp-1">{p.shortDescription}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-xs font-extrabold text-brand-dark">
+                            {p.pricingType === 'VARIANT' ? 'From ' : ''}
+                            {formatPKR(p.variants?.[0]?.price || p.basePrice)}
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-semibold uppercase">
+                            Type {p.pricingType}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {p.isCustomizable && (
+                      <div className="p-2 bg-purple-50 rounded-xl text-[11px] text-purple-900 font-semibold flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-700" />
+                        <span>Customizable Cake Flow Enabled (30% Adv)</span>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
+                      <span
+                        className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${p.isAvailable ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
+                          }`}
+                      >
+                        {p.isAvailable ? 'Available' : 'Hidden'}
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleOpenEdit(p)}
+                          className="p-2 rounded-xl bg-gray-100 hover:bg-brand-50 hover:text-brand-700 text-gray-600 transition"
+                          title="Edit Product"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(p.id)}
+                          className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition"
+                          title="Delete Product"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })}
+          </div>
 
-              {p.isCustomizable && (
-                <div className="p-2 bg-purple-50 rounded-xl text-[11px] text-purple-900 font-semibold flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-                  <span>Customizable Cake Flow Enabled (30% Adv)</span>
-                </div>
-              )}
+          {/* Pagination Controls */}
+          {filteredProducts.length > ITEMS_PER_PAGE && (
+            <div className="flex items-center justify-between bg-white px-6 py-4 rounded-3xl border border-gray-200/80 shadow-sm mt-4">
+              <span className="text-xs text-gray-500 font-semibold">
+                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} items
+              </span>
 
-              {/* Action Buttons */}
-              <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
-                <span
-                  className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
-                    p.isAvailable ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
-                  }`}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
                 >
-                  {p.isAvailable ? 'Available' : 'Hidden'}
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Prev</span>
+                </button>
+
+                <span className="text-xs font-extrabold text-brand-dark px-2">
+                  Page {currentPage} of {Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
                 </span>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleOpenEdit(p)}
-                    className="p-2 rounded-xl bg-gray-100 hover:bg-brand-50 hover:text-brand-700 text-gray-600 transition"
-                    title="Edit Product"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(p.id)}
-                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition"
-                    title="Delete Product"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE), p + 1))}
+                  disabled={currentPage >= Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
+                  className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* Pagination Controls */}
-      {filteredProducts.length > ITEMS_PER_PAGE && (
-        <div className="flex items-center justify-between bg-white px-6 py-4 rounded-3xl border border-gray-200/80 shadow-sm mt-4">
-          <span className="text-xs text-gray-500 font-semibold">
-            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} items
-          </span>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Prev</span>
-            </button>
-
-            <span className="text-xs font-extrabold text-brand-dark px-2">
-              Page {currentPage} of {Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
-            </span>
-
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(Math.ceil(filteredProducts.length / ITEMS_PER_PAGE), p + 1))}
-              disabled={currentPage >= Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
-              className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
-            >
-              <span>Next</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
-      </>
+          )}
+        </>
       )}
 
       {/* Edit / Add Modal */}
@@ -688,38 +724,38 @@ export default function AdminProductsPage() {
                   Only showing images that belong to the selected category, so items can't end up with the wrong section's photo.
                 </p>
                 <div className="flex items-center gap-3">
-                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 shrink-0">
-                      {editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0] ? (
-                        <img
-                          src={editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0]}
-                          alt="Selected preview"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/images/placeholder-product.svg';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No img</div>
-                      )}
-                    </div>
-                    <select
-                      value={editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0] || ''}
-                      onChange={(e) => setEditingProduct({ ...editingProduct, images: [e.target.value] })}
-                      className="flex-1 text-xs p-3 rounded-xl border border-gray-300 bg-white"
-                    >
-                      {getImagesForCategory(editingProduct.categoryId).map((img) => {
-                        const filename = img.split('/').pop() || img;
-                        const label = img.startsWith('http')
-                          ? `Uploaded: ${filename.slice(0, 24)}...`
-                          : `${filename} (${img.split('/')[2] || 'general'})`;
-                        return (
-                          <option key={img} value={img}>
-                            {label}
-                          </option>
-                        );
-                      })}
-                    </select>
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 shrink-0">
+                    {editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0] ? (
+                      <img
+                        src={editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0]}
+                        alt="Selected preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/images/placeholder-product.svg';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No img</div>
+                    )}
                   </div>
+                  <select
+                    value={editingProduct.images?.[0] || getImagesForCategory(editingProduct.categoryId)[0] || ''}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, images: [e.target.value] })}
+                    className="flex-1 text-xs p-3 rounded-xl border border-gray-300 bg-white"
+                  >
+                    {getImagesForCategory(editingProduct.categoryId).map((img) => {
+                      const filename = img.split('/').pop() || img;
+                      const label = img.startsWith('http')
+                        ? `Uploaded: ${filename.slice(0, 24)}...`
+                        : `${filename} (${img.split('/')[2] || 'general'})`;
+                      return (
+                        <option key={img} value={img}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
 
                 {/* Real file upload — uploads to durable Vercel Blob storage
                     (see src/app/api/admin/upload/route.ts) and selects it
@@ -727,11 +763,10 @@ export default function AdminProductsPage() {
                     photo library above. */}
                 <div className="mt-2 flex items-center gap-3 flex-wrap">
                   <label
-                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer transition ${
-                      isUploading
+                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer transition ${isUploading
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-brand-50 text-brand-800 border border-brand-200 hover:bg-brand-100'
-                    }`}
+                      }`}
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>{isUploading ? 'Uploading...' : 'Upload New Image'}</span>
@@ -817,11 +852,12 @@ export default function AdminProductsPage() {
                 <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={editingProduct.isCustomizable || false}
+                    checked={editingProduct.categoryId === 'customized-cakes' || editingProduct.isCustomizable || false}
+                    disabled={editingProduct.categoryId === 'customized-cakes'}
                     onChange={(e) => setEditingProduct({ ...editingProduct, isCustomizable: e.target.checked })}
-                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500"
+                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   />
-                  <span>Mark as Customizable Cake (Enables Section 7 Multi-Step Configurator & 30% Advance)</span>
+                  <span>Mark as Customizable Cake (Enables Section 7 Multi-Step Configurator & 30% Advance) {editingProduct.categoryId === 'customized-cakes' && <span className="text-purple-600 ml-1">(Required)</span>}</span>
                 </label>
 
                 <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">

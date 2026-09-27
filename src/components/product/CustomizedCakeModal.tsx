@@ -5,7 +5,7 @@ import { Product, CustomizationOption, Category } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { formatPKR, getProductFallbackImage } from '@/lib/utils';
 import ProductImage from '@/components/product/ProductImage';
-import { DEFAULT_CAKE_WEIGHT_OPTIONS, DEFAULT_CAKE_FLAVOR_OPTIONS } from '@/lib/customizationDefaults';
+import { DEFAULT_CAKE_FLAVOR_OPTIONS, getWeightOptionsForProduct } from '@/lib/customizationDefaults';
 import {
   X,
   Calendar,
@@ -46,20 +46,21 @@ export default function CustomizedCakeModal({
   const [quantity, setQuantity] = useState(1);
   const [specialInstructions, setSpecialInstructions] = useState('');
 
+  // Dynamically resolve weight options from product variants (admin-configured) enforcing minimum 3 LBS
+  const weightOptions = useMemo(() => {
+    if (!product) return [];
+    return getWeightOptionsForProduct(product);
+  }, [product]);
+
+  const flavorStep = product?.customizationSteps?.find((s) => s.stepType === 'RADIO' && s.title.toLowerCase().includes('flavor'));
+  const flavorOptions = flavorStep?.options || DEFAULT_CAKE_FLAVOR_OPTIONS;
+
+  const activeWeight = selectedWeightOpt || weightOptions.find((w) => w.isDefault) || weightOptions[0];
+  const activeFlavor = selectedFlavorOpt || flavorOptions.find((f) => f.isDefault) || flavorOptions[0];
+
   if (!product) return null;
 
   const fallbackImage = getProductFallbackImage(product.categoryId, product.subcategoryId, categories);
-
-  const weightStep = product.customizationSteps?.find((s) => s.stepType === 'RADIO' && s.title.toLowerCase().includes('weight'));
-  const flavorStep = product.customizationSteps?.find((s) => s.stepType === 'RADIO' && s.title.toLowerCase().includes('flavor'));
-
-  // Default selections if not set
-  const weightOptions = weightStep?.options || DEFAULT_CAKE_WEIGHT_OPTIONS;
-
-  const flavorOptions = flavorStep?.options || DEFAULT_CAKE_FLAVOR_OPTIONS;
-
-  const activeWeight = selectedWeightOpt || weightOptions[0];
-  const activeFlavor = selectedFlavorOpt || flavorOptions[0];
 
   // Are all required steps answered?
   const isStep1Answered = !!activeWeight;
@@ -68,12 +69,12 @@ export default function CustomizedCakeModal({
   const isValidConfig = isStep1Answered && isStep2Answered && isDateSelected;
 
   // Live Unit Price:
-  const unitPrice = (activeWeight?.priceModifier || product.basePrice) + (activeFlavor?.priceModifier || 0);
+  const unitPrice = (activeWeight?.priceModifier ?? product.basePrice) + (activeFlavor?.priceModifier ?? 0);
   const lineTotal = isValidConfig ? unitPrice * quantity : 0;
   const advanceRequiredAmount = Math.round(lineTotal * 0.3); // 30% advance
 
   const handleAddToCart = () => {
-    if (!isValidConfig) return;
+    if (!isValidConfig || !product) return;
 
     addItem({
       productId: product.id,
@@ -81,6 +82,7 @@ export default function CustomizedCakeModal({
       image: product.images[0] || fallbackImage,
       unitPrice,
       quantity,
+      variantId: activeWeight?.id,
       variantName: activeWeight?.name,
       isCustomized: true,
       requiresAdvance: true, // Section 7.1 hard rule

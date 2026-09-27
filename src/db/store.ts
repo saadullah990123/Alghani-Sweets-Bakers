@@ -8,6 +8,7 @@ import { applyStockDecrement, OutOfStockError } from '@/lib/stock';
 import { paginate, DEFAULT_PAGE_SIZE, type PaginatedResult } from '@/lib/pagination';
 import { db } from './client';
 import * as pg from './store.pg';
+import { parseWeightLbs } from '@/lib/customizationDefaults';
 import { createClient } from '@supabase/supabase-js';
 
 // -----------------------------------------------------------------------------
@@ -68,6 +69,7 @@ export interface StoreData {
 // one introduced by caching, and it's exactly what the Postgres migration
 // (already built, see docs/postgres-migration.md) resolves properly.
 let cachedData: StoreData | null = null;
+let cachedMtime: number = 0;
 
 function ensureDataFile(): StoreData {
   if (runningOnVercel && !db) {
@@ -76,7 +78,18 @@ function ensureDataFile(): StoreData {
     );
   }
 
-  if (cachedData) return cachedData;
+  if (cachedData) {
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const currentMtime = fs.statSync(DATA_FILE).mtimeMs;
+        if (currentMtime <= cachedMtime) {
+          return cachedData;
+        }
+      }
+    } catch (e) {
+      // Ignore stat errors and fall back to re-reading
+    }
+  }
 
   try {
     if (!fs.existsSync(DATA_DIR)) {
@@ -113,8 +126,51 @@ function ensureDataFile(): StoreData {
         }
       }
 
+      // Migration: Merge missing initial products & sync customized cake basePrices
+      if (Array.isArray(parsed.products)) {
+        const existingIds = new Set(parsed.products.map((p) => p.id));
+        let dataUpdated = false;
+        for (const initProd of initialProducts) {
+          if (!existingIds.has(initProd.id)) {
+            parsed.products.push(initProd);
+            dataUpdated = true;
+          }
+        }
+        for (const p of parsed.products) {
+          if ((p.categoryId === 'customized-cakes' || p.isCustomizable) && p.variants && p.variants.length > 0) {
+            p.pricingType = 'VARIANT';
+            const validVariants = p.variants.filter((v) => {
+              const lbs = parseWeightLbs(v.name);
+              return lbs === null || lbs >= 3;
+            });
+            const sorted = [...(validVariants.length > 0 ? validVariants : p.variants)].sort((a, b) => {
+              const wA = parseWeightLbs(a.name) ?? Infinity;
+              const wB = parseWeightLbs(b.name) ?? Infinity;
+              if (wA !== wB) return wA - wB;
+              return a.price - b.price;
+            });
+            if (sorted[0] && sorted[0].price > 0 && p.basePrice !== sorted[0].price) {
+              p.basePrice = sorted[0].price;
+              dataUpdated = true;
+            }
+          }
+        }
+        if (dataUpdated) {
+          try {
+            fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2), 'utf8');
+          } catch (e) {
+            console.error('Error auto-migrating store.json:', e);
+          }
+        }
+      }
+
       cachedData = parsed;
-      return parsed;   // return parsed, not cachedData
+      try {
+        cachedMtime = fs.statSync(DATA_FILE).mtimeMs;
+      } catch (e) {
+        cachedMtime = Date.now();
+      }
+      return parsed;
     }
   } catch (err) {
     console.error('Error reading store file, initializing defaults:', err);
@@ -263,6 +319,7 @@ function saveData(data: StoreData) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    cachedMtime = fs.statSync(DATA_FILE).mtimeMs;
   } catch (err) {
     console.error('Error writing store file:', err);
   }

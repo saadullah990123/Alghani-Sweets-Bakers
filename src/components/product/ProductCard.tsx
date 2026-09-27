@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useMemo } from 'react';
 import { Product, ProductVariant, Category } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { formatPKR, getProductFallbackImage } from '@/lib/utils';
 import ProductImage from '@/components/product/ProductImage';
+import { parseWeightLbs } from '@/lib/customizationDefaults';
 import { Plus, Sparkles, Check, ChevronRight } from 'lucide-react';
 
 interface ProductCardProps {
@@ -23,26 +24,47 @@ function ProductCard({
   const { addItem, getQuantityInCart } = useCart();
   const fallbackImage = getProductFallbackImage(product.categoryId, product.subcategoryId, categories);
 
-  // For Type B Variant pricing pills on card:
+  const isCustomizedCake = product.isCustomizable || product.categoryId === 'customized-cakes';
+
+  // For Type B Variant pricing & Customized Cakes:
   const variants = product.variants || [];
-  const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
+  const validCustomizedVariants = useMemo(() => {
+    if (!isCustomizedCake || variants.length === 0) return variants;
+    const filtered = variants.filter((v) => {
+      const lbs = parseWeightLbs(v.name);
+      return lbs === null || lbs >= 3;
+    });
+    return [...filtered].sort((a, b) => {
+      const wA = parseWeightLbs(a.name) ?? Infinity;
+      const wB = parseWeightLbs(b.name) ?? Infinity;
+      if (wA !== wB) return wA - wB;
+      return a.price - b.price;
+    });
+  }, [isCustomizedCake, variants]);
+
+  const activeVariants = isCustomizedCake ? validCustomizedVariants : variants;
+  const defaultVariant = activeVariants.find((v) => v.isDefault) || activeVariants[0];
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(defaultVariant);
   const [addedToast, setAddedToast] = useState(false);
 
-  // Optimistic, client-only stock check — purely a read of local cart state
-  // (no network round trip), so it updates the instant the shopper adds an
-  // item. `undefined` means made-to-order/unlimited (the default for almost
-  // every product), so most cards never show this at all.
+  // Optimistic, client-only stock check
   const remainingStock =
     typeof product.stock === 'number' ? product.stock - getQuantityInCart(product.id) : undefined;
   const isSoldOut = remainingStock !== undefined && remainingStock <= 0;
   const isLowStock = remainingStock !== undefined && remainingStock > 0 && remainingStock <= 3;
 
   // Determine current active price for card:
-  const currentPrice =
-    product.pricingType === 'VARIANT' && selectedVariant
-      ? selectedVariant.price
-      : product.basePrice;
+  const currentPrice = useMemo(() => {
+    if (isCustomizedCake) {
+      if (selectedVariant) return selectedVariant.price;
+      if (validCustomizedVariants.length > 0) return validCustomizedVariants[0].price;
+      return product.basePrice;
+    }
+    if (product.pricingType === 'VARIANT' && selectedVariant) {
+      return selectedVariant.price;
+    }
+    return product.basePrice;
+  }, [isCustomizedCake, selectedVariant, validCustomizedVariants, product.pricingType, product.basePrice]);
 
   const handleCardClick = () => {
     if (product.isCustomizable) {
@@ -171,7 +193,7 @@ function ProductCard({
         <div className="mt-auto pt-2.5 flex flex-row items-center justify-between border-t border-gray-100 gap-1.5 sm:gap-2">
           <div className="flex flex-col justify-center min-w-0 pr-1">
             <span className="text-[10px] sm:text-[11px] text-gray-400 font-medium block leading-none mb-0.5 whitespace-nowrap">
-              {product.pricingType === 'VARIANT' && !selectedVariant ? 'From' : 'Price'}
+              {isCustomizedCake || (product.pricingType === 'VARIANT' && !selectedVariant) ? 'From' : 'Price'}
             </span>
             <span className="text-[12px] sm:text-base font-extrabold text-brand-600 tracking-tight block whitespace-nowrap leading-tight">
               {formatPKR(currentPrice)}

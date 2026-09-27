@@ -4308,9 +4308,17 @@
     "advancePercentage": 30,
     "aboutText": "Al-Ghani Sweets & Bakers has been serving freshly baked delights, premium occasion cakes, royal traditional sweets, and mouth-watering fast food for generations. We take pride in using only the finest ingredients, pure desi ghee, and time-tested recipes to bring warmth and happiness to your family celebrations.",
     "facebookUrl": "https://facebook.com/alghanibakers",
-    "instagramUrl": "https://instagram.com/alghanibakers",
+    "instagramUrl": "#",
     "youtubeUrl": "https://youtube.com",
-    "linkedinUrl": "https://linkedin.com"
+    "linkedinUrl": "https://linkedin.com",
+    "easypaisaTitle": "Al-Ghani Sweets",
+    "easypaisaNumber": "0333-7654321",
+    "jazzcashTitle": "Al-Ghani Bakers",
+    "jazzcashNumber": "0300-1234567",
+    "bankName": "Meezan Bank",
+    "bankAccountTitle": "Al-Ghani Sweets & Bakers",
+    "bankAccountNumber": "PK64MEZN0001234567890101",
+    "paymentInstructions": "Please transfer to the account above and enter your Transaction ID (TID) so staff can verify it immediately."
   },
   "orders": [
     {
@@ -4341,8 +4349,8 @@
       "orderStatus": "PENDING",
       "isViewedByAdmin": false,
       "internalNotes": "Customized Nikkah cake with gold message requested.",
-      "createdAt": "2026-09-08T04:44:11.150Z",
-      "updatedAt": "2026-09-08T04:44:11.150Z",
+      "createdAt": "2026-09-26T04:25:59.705Z",
+      "updatedAt": "2026-09-26T04:25:59.705Z",
       "items": [
         {
           "id": "item-1",
@@ -4401,8 +4409,8 @@
       "orderStatus": "PREPARING",
       "isViewedByAdmin": true,
       "internalNotes": "Regular customer, extra garlic dip added.",
-      "createdAt": "2026-09-08T03:44:11.150Z",
-      "updatedAt": "2026-09-08T04:59:11.150Z",
+      "createdAt": "2026-09-26T03:25:59.705Z",
+      "updatedAt": "2026-09-26T04:40:59.705Z",
       "items": [
         {
           "id": "item-3",
@@ -4427,19 +4435,9 @@
       "name": "Al-Ghani Store Manager",
       "role": "SUPER_ADMIN",
       "isActive": true,
-      "lastLoginAt": "2026-09-08T05:19:11.150Z"
+      "lastLoginAt": "2026-09-26T05:00:59.705Z"
     }
   ],
   "reviews": [],
-  "complaints": [
-    {
-      "id": "cmp-1788848158030-28jbi",
-      "customerPhone": "03015419752",
-      "customerName": "Muhammad Ali",
-      "description": "Cake is not fresh",
-      "imageUrl": "/uploads/complaints/1788848157311-c0796a7a.png",
-      "status": "NEW",
-      "createdAt": "2026-09-08T06:15:58.030Z"
-    }
-  ]
+  "complaints": []
 }

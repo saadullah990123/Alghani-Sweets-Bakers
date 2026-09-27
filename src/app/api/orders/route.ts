@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createOrder, decrementStock, getAllProductsAdmin, getOrderById, getProductsByIds, getSettings } from '@/db/store';
 import { generateOrderId } from '@/lib/utils';
-import { DEFAULT_CAKE_WEIGHT_OPTIONS, DEFAULT_CAKE_FLAVOR_OPTIONS } from '@/lib/customizationDefaults';
+import { DEFAULT_CAKE_FLAVOR_OPTIONS, getWeightOptionsForProduct } from '@/lib/customizationDefaults';
 import { PaymentMethod, PaymentStatus } from '@/lib/types';
 import { notifyNewOrder } from '@/lib/notifications';
 import { calculateSubtotal, calculateDiscount, calculateOrderTotals } from '@/lib/pricing';
@@ -110,25 +110,25 @@ export async function POST(req: NextRequest) {
       let unitPrice: number;
       let variantName: string | undefined;
 
-      if (rawItem.isCustomized) {
-        // Customized cakes: price = weight tier + flavor modifier, resolved
-        // against the product's own steps if defined, else the shared
-        // default price table (same one the modal uses for display).
-        const weightOptions =
-          product.customizationSteps?.find(
-            (s) => s.stepType === 'RADIO' && s.title.toLowerCase().includes('weight')
-          )?.options || DEFAULT_CAKE_WEIGHT_OPTIONS;
+      if (rawItem.isCustomized || product.categoryId === 'customized-cakes') {
+        // Customized cakes: resolve weight & flavor against dynamic product variants & options enforcing >= 3 LBS
+        const weightOptions = getWeightOptionsForProduct(product);
         const flavorOptions =
           product.customizationSteps?.find(
             (s) => s.stepType === 'RADIO' && s.title.toLowerCase().includes('flavor')
           )?.options || DEFAULT_CAKE_FLAVOR_OPTIONS;
 
         const weightOpt =
-          weightOptions.find((o) => o.name === rawItem.customizationDetails?.weight) || weightOptions[0];
+          weightOptions.find(
+            (o) =>
+              o.id === rawItem.variantId ||
+              o.name === rawItem.customizationDetails?.weight ||
+              o.name === rawItem.variantName
+          ) || weightOptions[0];
         const flavorOpt =
           flavorOptions.find((o) => o.name === rawItem.customizationDetails?.flavor) || flavorOptions[0];
 
-        unitPrice = (weightOpt?.priceModifier || product.basePrice) + (flavorOpt?.priceModifier || 0);
+        unitPrice = (weightOpt?.priceModifier ?? product.basePrice) + (flavorOpt?.priceModifier ?? 0);
         variantName = weightOpt?.name;
       } else if (rawItem.variantId) {
         const variant = product.variants?.find((v) => v.id === rawItem.variantId);
