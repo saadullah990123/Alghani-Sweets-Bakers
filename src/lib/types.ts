@@ -103,7 +103,16 @@ export interface CartItem {
 }
 
 export type PaymentMethod = 'COD' | 'ONLINE_CARD' | 'JAZZCASH' | 'EASYPAISA' | 'MEEZAN_BANK';
-export type PaymentStatus = 'PENDING' | 'PENDING_VERIFICATION' | 'ADVANCE_PAID' | 'PAID' | 'FAILED';
+export type PaymentStatus =
+  | 'paid'
+  | 'pending'
+  | 'verified'
+  | 'cancelled'
+  | 'PENDING'
+  | 'PENDING_VERIFICATION'
+  | 'ADVANCE_PAID'
+  | 'PAID'
+  | 'FAILED';
 export type OrderStatus = 'PENDING' | 'PREPARING' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'CANCELLED';
 
 export interface Order {

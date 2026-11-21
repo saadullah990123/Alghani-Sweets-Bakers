@@ -138,7 +138,7 @@ export const orders = pgTable('orders', {
 
   // Payment Options
   paymentMethod: varchar('payment_method', { length: 50 }).notNull(), // COD, ONLINE_CARD, JAZZCASH, EASYPAISA, MEEZAN_BANK
-  paymentStatus: varchar('payment_status', { length: 50 }).default('PENDING').notNull(), // PENDING, ADVANCE_PAID, PAID, FAILED
+  paymentStatus: varchar('payment_status', { length: 50 }).default('pending').notNull(), // paid, pending, verified, cancelled (legacy: PENDING, ADVANCE_PAID, PAID, FAILED, PENDING_VERIFICATION)
   paymentReference: varchar('payment_reference', { length: 255 }),
   changeRequest: text('change_request'), // For COD e.g. "Need change for Rs. 5000"
 

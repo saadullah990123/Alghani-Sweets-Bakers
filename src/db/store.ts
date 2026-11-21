@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { initialCategories, initialProducts, initialHeroSlides, initialSettings } from './seed-data';
-import { Category, Product, HeroSlide, StoreSettings, Order, AdminUser, OrderStatus, ProductReview, Complaint } from '@/lib/types';
+import { Category, Product, HeroSlide, StoreSettings, Order, AdminUser, OrderStatus, PaymentStatus, ProductReview, Complaint } from '@/lib/types';
 import { hashPassword } from '@/lib/auth';
 import { generateResetToken, verifyResetToken } from '@/lib/tokens';
 import { applyStockDecrement, OutOfStockError } from '@/lib/stock';
@@ -104,6 +104,14 @@ function ensureDataFile(): StoreData {
       }
       if (!Array.isArray(parsed.complaints)) {
         parsed.complaints = [];
+      }
+      // Migration: Ensure all orders have a paymentStatus
+      if (Array.isArray(parsed.orders)) {
+        for (const o of parsed.orders) {
+          if (!o.paymentStatus) {
+            o.paymentStatus = 'pending';
+          }
+        }
       }
       // Migration: Ensure customized-cakes has proper customized cake banner URLs
       if (Array.isArray(parsed.categories)) {
@@ -759,6 +767,34 @@ export async function markOrderPaymentFailed(id: string): Promise<Order | null> 
   order.updatedAt = new Date().toISOString();
   saveData(data);
   return order;
+}
+
+export async function updateOrderPaymentStatus(
+  id: string,
+  paymentStatus: PaymentStatus
+): Promise<Order | null> {
+  if (db) return pg.updateOrderPaymentStatusPg(id, paymentStatus);
+  const data = ensureDataFile();
+  const cleanId = id.trim().toLowerCase();
+  const order = data.orders.find(o => o.id.trim().toLowerCase() === cleanId);
+  if (!order) return null;
+
+  order.paymentStatus = paymentStatus;
+  order.updatedAt = new Date().toISOString();
+  saveData(data);
+  return order;
+}
+
+export async function deleteOrder(id: string): Promise<boolean> {
+  if (db) return pg.deleteOrderPg(id);
+  const data = ensureDataFile();
+  const cleanId = id.trim().toLowerCase();
+  const index = data.orders.findIndex(o => o.id.trim().toLowerCase() === cleanId);
+  if (index === -1) return false;
+
+  data.orders.splice(index, 1);
+  saveData(data);
+  return true;
 }
 
 export async function getCustomerOrderHistory(phone: string): Promise<Order[]> {

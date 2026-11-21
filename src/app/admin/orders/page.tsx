@@ -16,6 +16,7 @@ import {
   Eye,
   Phone,
   RefreshCw,
+  Trash2,
 } from 'lucide-react';
 
 export default function AdminOrdersPage() {
@@ -96,6 +97,28 @@ export default function AdminOrdersPage() {
       setSortOrder('desc');
     }
     resetToFirstPage();
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to permanently delete order ${orderId}?\n\nWARNING: This action cannot be undone. Please ensure this is a test order before proceeding.`
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/admin/orders?id=${encodeURIComponent(orderId)}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        fetchOrders();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to delete order.');
+      }
+    } catch (err) {
+      console.error('Failed to delete order:', err);
+      alert('An error occurred while deleting the order.');
+    }
   };
 
   return (
@@ -341,24 +364,27 @@ export default function AdminOrdersPage() {
                           </span>
                           <span
                             className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase ${
-                              order.paymentStatus === 'PAID'
+                              (order.paymentStatus || '').toLowerCase() === 'paid'
                                 ? 'bg-green-100 text-green-800'
-                                : order.paymentStatus === 'FAILED'
+                                : (order.paymentStatus || '').toLowerCase() === 'verified'
+                                ? 'bg-blue-100 text-blue-800'
+                                : (order.paymentStatus || '').toLowerCase() === 'cancelled' ||
+                                  (order.paymentStatus || '').toLowerCase() === 'failed'
                                 ? 'bg-red-100 text-red-800'
-                                : order.paymentStatus === 'PENDING_VERIFICATION'
+                                : (order.paymentStatus || '').toLowerCase() === 'pending_verification'
                                 ? 'bg-orange-100 text-orange-800'
-                                : order.advanceConfirmed || order.paymentStatus === 'ADVANCE_PAID'
+                                : order.advanceConfirmed || (order.paymentStatus || '').toLowerCase() === 'advance_paid'
                                 ? 'bg-blue-100 text-blue-800'
                                 : 'bg-gray-100 text-gray-700'
                             }`}
                           >
                             {order.advanceConfirmed
                               ? 'Adv Confirmed'
-                              : order.paymentStatus === 'ADVANCE_PAID'
+                              : (order.paymentStatus || '').toLowerCase() === 'advance_paid'
                               ? 'Adv Received'
-                              : order.paymentStatus === 'PENDING_VERIFICATION'
+                              : (order.paymentStatus || '').toLowerCase() === 'pending_verification'
                               ? 'Verify Payment'
-                              : order.paymentStatus}
+                              : order.paymentStatus || 'Pending'}
                           </span>
                         </div>
                       </td>
@@ -384,13 +410,23 @@ export default function AdminOrdersPage() {
 
                       {/* Action Button */}
                       <td className="py-4 px-4 text-right whitespace-nowrap">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs rounded-xl shadow-sm transition"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>View Details</span>
-                        </Link>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Link
+                            href={`/admin/orders/${order.id}`}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs rounded-xl shadow-sm transition"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>View Details</span>
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteOrder(order.id)}
+                            title={`Delete order ${order.id}`}
+                            className="p-1.5 rounded-xl border border-gray-200 hover:border-red-200 text-gray-400 hover:text-red-600 hover:bg-red-50 transition"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

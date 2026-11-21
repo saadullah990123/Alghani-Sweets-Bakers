@@ -674,6 +674,27 @@ export async function markOrderPaymentFailedPg(id: string): Promise<Order | null
   return mapOrderRow(rows[0], itemRows);
 }
 
+export async function updateOrderPaymentStatusPg(id: string, paymentStatus: string): Promise<Order | null> {
+  const conn = assertDb();
+  const rows = await conn
+    .update(schema.orders)
+    .set({ paymentStatus, updatedAt: new Date() })
+    .where(eq(schema.orders.id, id))
+    .returning();
+  if (rows.length === 0) return null;
+  const itemRows = await conn.select().from(schema.orderItems).where(eq(schema.orderItems.orderId, id));
+  return mapOrderRow(rows[0], itemRows);
+}
+
+export async function deleteOrderPg(id: string): Promise<boolean> {
+  const conn = assertDb();
+  return await conn.transaction(async (tx) => {
+    await tx.delete(schema.orderItems).where(eq(schema.orderItems.orderId, id));
+    const result = await tx.delete(schema.orders).where(eq(schema.orders.id, id)).returning({ id: schema.orders.id });
+    return result.length > 0;
+  });
+}
+
 export async function getCustomerOrderHistoryPg(phone: string): Promise<Order[]> {
   const conn = assertDb();
   const [orderRows, itemRows] = await Promise.all([

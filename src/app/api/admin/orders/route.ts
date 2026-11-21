@@ -3,12 +3,15 @@ import {
   getOrders,
   getOrderById,
   updateOrderStatus,
+  updateOrderPaymentStatus,
+  deleteOrder,
   confirmOrderAdvance,
   confirmOrderPayment,
   markOrderPaymentFailed,
   getCustomerOrderHistory,
   getDashboardStats,
 } from '@/db/store';
+import { PaymentStatus } from '@/lib/types';
 import { parsePaginationParams } from '@/lib/pagination';
 
 export async function GET(req: NextRequest) {
@@ -88,6 +91,26 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json(updated);
     }
 
+    if (action === 'UPDATE_PAYMENT_STATUS' || (!action && body.paymentStatus !== undefined)) {
+      const rawStatus = body.paymentStatus;
+      if (!rawStatus) {
+        return NextResponse.json({ error: 'Payment status is required' }, { status: 400 });
+      }
+      const normalized = String(rawStatus).toLowerCase().trim() as PaymentStatus;
+      const validStatuses: PaymentStatus[] = ['paid', 'pending', 'verified', 'cancelled'];
+      if (!validStatuses.includes(normalized)) {
+        return NextResponse.json(
+          { error: 'Invalid payment status. Must be one of: paid, pending, verified, cancelled' },
+          { status: 400 }
+        );
+      }
+      const updated = await updateOrderPaymentStatus(id, normalized);
+      if (!updated) {
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+      }
+      return NextResponse.json(updated);
+    }
+
     if (action === 'UPDATE_STATUS' && status) {
       const updated = await updateOrderStatus(id, status, internalNotes);
       return NextResponse.json(updated);
@@ -97,5 +120,34 @@ export async function PATCH(req: NextRequest) {
   } catch (err: any) {
     console.error('Admin Orders PATCH Error:', err);
     return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    let id = searchParams.get('id');
+    if (!id) {
+      try {
+        const body = await req.json();
+        id = body?.id;
+      } catch {
+        // no body
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
+    }
+
+    const deleted = await deleteOrder(id);
+    if (!deleted) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, message: `Order ${id} deleted successfully` });
+  } catch (err: any) {
+    console.error('Admin Orders DELETE Error:', err);
+    return NextResponse.json({ error: 'Failed to delete order' }, { status: 500 });
   }
 }

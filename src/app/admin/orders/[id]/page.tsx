@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Order, OrderStatus } from '@/lib/types';
 import { formatPKR, formatDate } from '@/lib/utils';
 import AdminErrorBanner from '@/components/admin/AdminErrorBanner';
@@ -22,10 +22,12 @@ import {
   History,
   AlertCircle,
   Save,
+  Trash2,
 } from 'lucide-react';
 
 export default function OrderDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const orderId = params?.id as string;
 
   const [order, setOrder] = useState<Order | null>(null);
@@ -34,6 +36,7 @@ export default function OrderDetailPage() {
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [internalNotes, setInternalNotes] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [updateMsg, setUpdateMsg] = useState('');
   const [loadError, setLoadError] = useState('');
 
@@ -182,6 +185,62 @@ export default function OrderDetailPage() {
     }
   };
 
+  const handleUpdatePaymentStatus = async (newPaymentStatus: 'paid' | 'pending' | 'verified' | 'cancelled') => {
+    if (!order) return;
+    setIsUpdating(true);
+    try {
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: order.id,
+          action: 'UPDATE_PAYMENT_STATUS',
+          paymentStatus: newPaymentStatus,
+        }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setOrder(updated);
+        setUpdateMsg(`Payment status updated to ${newPaymentStatus.toUpperCase()}`);
+        setTimeout(() => setUpdateMsg(''), 3000);
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || 'Failed to update payment status');
+      }
+    } catch (e) {
+      console.error('Failed to update payment status:', e);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteOrder = async () => {
+    if (!order) return;
+    const confirmed = window.confirm(
+      `Are you sure you want to permanently delete order ${order.id}?\n\nWARNING: This action cannot be undone. Please ensure this is a test order before proceeding.`
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/orders?id=${encodeURIComponent(order.id)}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        alert(`Order ${order.id} deleted successfully.`);
+        router.push('/admin/orders');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to delete order.');
+        setIsDeleting(false);
+      }
+    } catch (err) {
+      console.error('Failed to delete order:', err);
+      alert('An error occurred while deleting the order.');
+      setIsDeleting(false);
+    }
+  };
+
   const fetchCustomerHistory = async () => {
     if (!order?.customerPhone) return;
     try {
@@ -291,6 +350,18 @@ export default function OrderDetailPage() {
           >
             <Printer className="w-4 h-4" />
             <span>Print Packing Slip</span>
+          </button>
+
+          {/* Delete Test Order */}
+          <button
+            type="button"
+            onClick={handleDeleteOrder}
+            disabled={isDeleting}
+            className="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 font-bold text-xs rounded-xl border border-red-200 flex items-center gap-1.5 transition disabled:opacity-50"
+            title="Permanently delete this order (for test orders)"
+          >
+            <Trash2 className="w-4 h-4 text-red-600" />
+            <span>{isDeleting ? 'Deleting...' : 'Delete Order'}</span>
           </button>
         </div>
       </div>
@@ -559,19 +630,56 @@ export default function OrderDetailPage() {
                 </h3>
                 <span
                   className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
-                    order.paymentStatus === 'PAID'
+                    (order.paymentStatus || '').toLowerCase() === 'paid'
                       ? 'bg-green-100 text-green-800'
-                      : order.paymentStatus === 'FAILED'
+                      : (order.paymentStatus || '').toLowerCase() === 'verified'
+                      ? 'bg-blue-100 text-blue-800'
+                      : (order.paymentStatus || '').toLowerCase() === 'cancelled' || (order.paymentStatus || '').toLowerCase() === 'failed'
                       ? 'bg-red-100 text-red-800'
-                      : order.paymentStatus === 'PENDING_VERIFICATION'
+                      : (order.paymentStatus || '').toLowerCase() === 'pending_verification'
                       ? 'bg-orange-100 text-orange-800'
-                      : order.paymentStatus === 'ADVANCE_PAID'
+                      : (order.paymentStatus || '').toLowerCase() === 'advance_paid'
                       ? 'bg-blue-100 text-blue-800'
                       : 'bg-gray-100 text-gray-700'
                   }`}
                 >
-                  {order.paymentStatus.replace('_', ' ')}
+                  {order.paymentStatus ? order.paymentStatus.replace('_', ' ') : 'PENDING'}
                 </span>
+              </div>
+
+              {/* Set Payment Status Controls */}
+              <div className="p-3 bg-gray-50/80 rounded-2xl border border-gray-100 space-y-2 no-print">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
+                  Set Payment Status:
+                </span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(
+                    [
+                      { value: 'pending', label: 'Pending', activeCls: 'bg-amber-500 text-white border-amber-600' },
+                      { value: 'paid', label: 'Paid', activeCls: 'bg-green-600 text-white border-green-700' },
+                      { value: 'verified', label: 'Verified', activeCls: 'bg-blue-600 text-white border-blue-700' },
+                      { value: 'cancelled', label: 'Cancelled', activeCls: 'bg-red-600 text-white border-red-700' },
+                    ] as const
+                  ).map((st) => {
+                    const isSelected = (order.paymentStatus || '').toLowerCase() === st.value;
+                    return (
+                      <button
+                        key={st.value}
+                        type="button"
+                        onClick={() => handleUpdatePaymentStatus(st.value)}
+                        disabled={isUpdating}
+                        className={`py-1.5 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between border ${
+                          isSelected
+                            ? `${st.activeCls} shadow-sm`
+                            : 'bg-white hover:bg-gray-100 text-gray-700 border-gray-200'
+                        }`}
+                      >
+                        <span>{st.label}</span>
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Manual payment verification — required for every non-COD order
