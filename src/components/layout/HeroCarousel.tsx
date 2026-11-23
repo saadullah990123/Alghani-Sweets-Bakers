@@ -70,8 +70,8 @@ export default function HeroCarousel({ slides = [] }: HeroCarouselProps) {
 
               {/* Text & Action CTA */}
               <div className="absolute inset-0 z-20 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 w-full">
-                  <div className="max-w-xl space-y-2 sm:space-y-4">
+                <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-6 sm:px-12 lg:px-16 2xl:px-20 w-full">
+                  <div className="max-w-xl 2xl:max-w-2xl space-y-2 sm:space-y-4">
                     <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-500 text-brand-dark shadow-sm">
                       Special Bakery Delights
                     </span>

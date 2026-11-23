@@ -25,7 +25,7 @@ export default async function AdminDashboardPage() {
 
   const topRecentOrders = recentOrders.data.slice(0, 6);
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto space-y-8">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm">
         <div>
@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* 4 Exact Urgency Cards from Section 9.1 D */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 2xl:gap-8">
         {/* Card 1: New Orders Today */}
         <div className="bg-white p-5 rounded-3xl border border-gray-200/80 shadow-sm flex items-center justify-between">
           <div className="space-y-1">
@@ -117,7 +117,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Quick Action Filter Cards (Clean Modern High-Contrast Light Theme) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-6">
         <Link
           href="/admin/orders?containsCustomizedCake=true"
           className="p-5 bg-white border-2 border-purple-100 hover:border-purple-300 rounded-3xl shadow-sm hover:shadow-md transition flex items-center justify-between group"

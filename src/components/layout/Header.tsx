@@ -199,7 +199,7 @@ export default function Header({
   return (
     <>
       <header className="sticky top-0 z-40 w-full bg-white border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 h-16 sm:h-24 flex items-center justify-between gap-1 sm:gap-4">
+        <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-2 sm:px-6 lg:px-8 2xl:px-12 h-16 sm:h-24 flex items-center justify-between gap-1 sm:gap-4">
           {/* Left: Store Location Badge & Support Phone Pill */}
           <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Store Location Badge (Fixed — not clickable) */}

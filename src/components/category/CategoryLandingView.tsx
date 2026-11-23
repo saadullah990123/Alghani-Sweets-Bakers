@@ -222,7 +222,7 @@ export default function CategoryLandingView({
           ========================================================================= */}
       {(subcategories.length > 0 || (sections && sections.length > 0)) && (
         <div className="w-full bg-white border-b border-amber-900/10 shadow-sm py-2.5 sm:py-3 sticky top-[138px] sm:top-[160px] z-20 backdrop-blur-md bg-white/95">
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar">
+          <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar">
             {/* "All" pill */}
             <button
               onClick={() => setSelectedSubcategoryId(null)}
@@ -276,7 +276,7 @@ export default function CategoryLandingView({
       {/* =========================================================================
           4. FUNCTIONAL SEARCH BAR SECTION (Centered search input with search button)
           ========================================================================= */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-2">
+      <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 mt-4 mb-2">
         <SearchBar
           query={searchQuery}
           onQueryChange={setSearchQuery}
@@ -325,7 +325,7 @@ export default function CategoryLandingView({
       {/* =========================================================================
           5. PRODUCT SHOWCASE GRID (Displaying matching product cards)
           ========================================================================= */}
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <main className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 mt-4">
         {filteredProducts.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 p-8 space-y-3 shadow-sm max-w-lg mx-auto mt-6">
             <div className="w-16 h-16 bg-amber-50 text-amber-700 rounded-full flex items-center justify-center mx-auto">
@@ -352,7 +352,7 @@ export default function CategoryLandingView({
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-6 mt-4">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

@@ -81,7 +81,7 @@ export default function AdminAccountPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+    <div className="w-full max-w-5xl 2xl:max-w-[1500px] mx-auto space-y-8 pb-12">
       <h1 className="font-serif text-2xl font-extrabold text-gray-900">Admin Account Settings</h1>
 
       {authFeedback && (

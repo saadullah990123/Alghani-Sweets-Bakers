@@ -116,7 +116,7 @@ export default function AdminComplaintsPage() {
   const resolvedCount = complaints.filter((c) => c.status === 'RESOLVED').length;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto space-y-6">
       {/* Page Header */}
       <div className="bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -55,8 +55,8 @@ export default function Footer({
       </div>
 
       {/* 2. Main Site Footer (Section 2.7) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 2xl:gap-12">
           {/* Brand Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">

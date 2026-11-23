@@ -107,22 +107,22 @@ function ProductCard({
   return (
     <div
       onClick={handleCardClick}
-      className="group relative bg-white rounded-2xl overflow-hidden border border-brand-100/80 hover:border-brand-300 shadow-sm hover:shadow-elevated transition-all duration-300 flex flex-col justify-between cursor-pointer"
+      className="group relative bg-white rounded-2xl overflow-hidden border border-brand-100/80 hover:border-brand-300 shadow-sm hover:shadow-elevated transition-all duration-300 flex flex-col h-full cursor-pointer"
     >
-      {/* Product Image Area */}
-      <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
+      {/* Product Image Area — Strictly Fixed Aspect-Ratio (Square) */}
+      <div className="relative w-full aspect-square bg-gray-50 overflow-hidden shrink-0">
         <ProductImage
           src={product.images[0]}
           fallbackSrc={fallbackImage}
           alt={product.name}
           fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1536px) 25vw, 20vw"
           className="object-cover transition-transform duration-500 ease-out"
           imageScale={product.imageScale}
         />
 
         {/* Badges */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
+        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
           {product.isCustomizable && (
             <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wide bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-amber-300" />
@@ -152,10 +152,10 @@ function ProductCard({
         </div>
       </div>
 
-      {/* Product Content */}
-      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+      {/* Product Content — Flex-1 with mt-auto on action row for bottom alignment */}
+      <div className="p-3 sm:p-4 flex-1 flex flex-col space-y-2">
         <div className="space-y-1">
-          <h3 className="font-bold text-xs sm:text-base text-gray-900 group-hover:text-brand-700 transition leading-snug line-clamp-2">
+          <h3 className="font-bold text-xs sm:text-base text-gray-900 group-hover:text-brand-700 transition leading-snug line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
             {product.name}
           </h3>
           {product.shortDescription && (

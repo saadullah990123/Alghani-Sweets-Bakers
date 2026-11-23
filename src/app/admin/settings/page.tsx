@@ -180,14 +180,14 @@ export default function AdminSettingsPage() {
 
   if (loadError || !settings) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full max-w-6xl 2xl:max-w-[1600px] mx-auto">
         <AdminErrorBanner message={loadError || 'Settings could not be loaded.'} onRetry={fetchSettingsAndProfile} />
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-12">
+    <div className="w-full max-w-6xl 2xl:max-w-[1600px] mx-auto space-y-8 pb-12">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm">
         <div>

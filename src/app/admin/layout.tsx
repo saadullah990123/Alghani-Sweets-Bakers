@@ -159,7 +159,7 @@ export default function AdminLayout({
 
       {/* Mobile Drawer */}
       {mobileNavOpen && (
-        <div className="md:hidden bg-[#3D1E0B] text-white p-4 space-y-2 border-b border-amber-900/60 shadow-xl">
+        <div className="md:hidden bg-[#3D1E0B] text-white p-4 space-y-2 border-b border-amber-900/60 shadow-xl max-h-[calc(100vh-60px)] overflow-y-auto animate-fadeIn">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -198,7 +198,7 @@ export default function AdminLayout({
       )}
 
       {/* Main Admin Workspace (High-Contrast Clean Modern Light Theme) */}
-      <main className="flex-1 overflow-y-auto min-h-screen p-4 sm:p-6 lg:p-8 bg-[#F8F9FA]">
+      <main className="flex-1 overflow-y-auto min-h-screen p-4 sm:p-6 lg:p-8 2xl:p-10 bg-[#F8F9FA]">
         {children}
       </main>
     </div>

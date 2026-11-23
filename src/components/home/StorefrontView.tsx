@@ -146,14 +146,14 @@ export default function StorefrontView({
       />
 
       {/* 3. Live Search Bar with Red Submit Arrow (Section 2.4) */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-2">
+      <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 mt-2">
         <SearchBar query={searchQuery} onQueryChange={setSearchQuery} />
       </div>
 
       {/* 4. DYNAMIC REQUIREMENT: Relevant Category & Subcategory Banner right after Search Bar */}
       {bannerUrl && (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 my-3">
-          <div className="relative w-full h-[120px] sm:h-[180px] md:h-[220px] lg:h-[260px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-amber-200/60 bg-white">
+        <div className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 my-3">
+          <div className="relative w-full h-[120px] sm:h-[180px] md:h-[220px] lg:h-[260px] 2xl:h-[300px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border border-amber-200/60 bg-white">
             <Image
               key={bannerUrl}
               src={bannerUrl}
@@ -168,7 +168,7 @@ export default function StorefrontView({
       )}
 
       {/* 5. Products Grid Section */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <section className="max-w-[1600px] 2xl:max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 mt-4">
         {/* Section Title & Count */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 border-b border-gray-200 pb-4">
           <div>
@@ -217,8 +217,8 @@ export default function StorefrontView({
             </button>
           </div>
         ) : (
-          /* Responsive 4-Column Product Grid */
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+          /* Responsive 4 to 5-Column Product Grid */
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

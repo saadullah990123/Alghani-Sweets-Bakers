@@ -132,7 +132,7 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto space-y-6">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm">
         <div>
@@ -166,7 +166,7 @@ export default function AdminCategoriesPage() {
       {loadError && <AdminErrorBanner message={loadError} onRetry={fetchCategories} />}
 
       {/* Categories List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-6">
         {categories.map((cat) => (
           <div
             key={cat.id}

@@ -286,7 +286,7 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl 2xl:max-w-[1600px] mx-auto space-y-6">
       {/* Top Header & Actions (No Print) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-gray-200/80 shadow-sm no-print">
         <div className="flex items-center gap-3">
@@ -390,7 +390,7 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 2xl:gap-8">
           {/* Left Column: Customer Profile & Order Items (Section 9.1 B) */}
           <div className="lg:col-span-8 space-y-6">
             {/* 1. Customer Block */}
